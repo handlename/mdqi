@@ -1,0 +1,10 @@
+hash: fac0701fa13203798d6443a46881d6c974ba3abe1c16cfa253a8750f1ed2447f
+updated: 2017-05-09T08:46:59.701203623+09:00
+imports:
+- name: github.com/morikuni/mdq
+  version: 6b5d80713aec8db01eefd36712bcb4a608d8f79e
+- name: github.com/pkg/errors
+  version: 645ef00459ed84a119197bfb8d8205042c6df63d
+- name: gopkg.in/yaml.v2
+  version: cd8b52f8269e0feb286dfeef29f8fe4d5b397e0b
+testImports: []
