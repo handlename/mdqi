@@ -8,12 +8,12 @@ import (
 	"github.com/olekukonko/tablewriter"
 )
 
-func (app *App) Print(results []Result) error {
-	app.Fprint(os.Stdout, results)
+func Print(results []Result) error {
+	Fprint(os.Stdout, results)
 	return nil
 }
 
-func (app *App) Fprint(out io.Writer, results []Result) error {
+func Fprint(out io.Writer, results []Result) error {
 	printer := tablewriter.NewWriter(out)
 	printer.SetAlignment(tablewriter.ALIGN_LEFT)
 

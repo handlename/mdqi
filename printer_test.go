@@ -7,8 +7,6 @@ import (
 )
 
 func TestPrinter(t *testing.T) {
-	app, _ := NewApp(Conf{})
-
 	results := []Result{
 		Result{
 			Database: "db1",
@@ -43,7 +41,7 @@ func TestPrinter(t *testing.T) {
 	}
 
 	var out bytes.Buffer
-	if err := app.Fprint(&out, results); err != nil {
+	if err := Fprint(&out, results); err != nil {
 		t.Fatalf("error on print: %s", err.Error())
 	}
 
