@@ -1,6 +1,4 @@
 package: github.com/handlename/mdqi
 import:
-- package: github.com/morikuni/mdq
-  version: ^0.0.2
 - package: github.com/pkg/errors
   version: ^0.8.0
