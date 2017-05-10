@@ -1,6 +1,8 @@
-hash: fac0701fa13203798d6443a46881d6c974ba3abe1c16cfa253a8750f1ed2447f
-updated: 2017-05-09T08:46:59.701203623+09:00
+hash: 0572703a182925b818f239705a5347c184b234ab74f8ba7d7a77bc5e65bd5c3c
+updated: 2017-05-10T09:10:06.979815932+09:00
 imports:
+- name: github.com/olekukonko/tablewriter
+  version: febf2d34b54a69ce7530036c7503b1c9fbfdf0bb
 - name: github.com/pkg/errors
   version: 645ef00459ed84a119197bfb8d8205042c6df63d
 testImports: []

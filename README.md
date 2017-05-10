@@ -30,8 +30,8 @@ $ mdqi
 
 ## TODO
 
-- [ ] run mdq through mdqi
-- [ ] display results as table
+- [x] run mdq through mdqi
+- [x] display results as table
 - [ ] load configuration file
 - [ ] remember tag
 - [ ] query history
