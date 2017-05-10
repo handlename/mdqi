@@ -1,8 +1,8 @@
 package mdqi
 
 type App struct {
-	// CmdPath is path to mdq command.
-	CmdPath string
+	// cmdPath is path to mdq command.
+	cmdPath string
 }
 
 type Conf struct {
@@ -18,6 +18,6 @@ func NewApp(conf Conf) (*App, error) {
 	// TODO: Check if mdq command exists by exec.LookPath.
 
 	return &App{
-		CmdPath: "mdq",
+		cmdPath: "mdq",
 	}, nil
 }

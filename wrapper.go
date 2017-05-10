@@ -10,7 +10,7 @@ import (
 
 func (app *App) RunCmd(query string, args ...string) (results []Result, err error) {
 	// Run mdq command
-	out, err := runCmd(app.CmdPath, query, args...)
+	out, err := runCmd(app.cmdPath, query, args...)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to run command")
 	}
