@@ -1,8 +1,12 @@
-hash: 0572703a182925b818f239705a5347c184b234ab74f8ba7d7a77bc5e65bd5c3c
-updated: 2017-05-10T09:10:06.979815932+09:00
+hash: ac2bd937d5c08f2b4c51acf0248934854cfb4d7e83517ca4d6cc68f9bded067f
+updated: 2017-05-11T08:35:47.885434612+09:00
 imports:
+- name: github.com/mattn/go-runewidth
+  version: 97311d9f7767e3d6f422ea06661bc2c7a19e8a5d
 - name: github.com/olekukonko/tablewriter
   version: febf2d34b54a69ce7530036c7503b1c9fbfdf0bb
+- name: github.com/peterh/liner
+  version: 88609521dc4b6c858fd4c98b628147da928ce4ac
 - name: github.com/pkg/errors
   version: 645ef00459ed84a119197bfb8d8205042c6df63d
 testImports: []

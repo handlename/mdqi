@@ -33,7 +33,7 @@ $ mdqi
 - [x] run mdq through mdqi
 - [x] display results as table
 - [x] convert mdq formatted JSON as table passed by stdin
-- [ ] receive command line input
+- [x] receive command line input
 - [ ] load configuration file
 - [ ] remember tag
 - [ ] query history
