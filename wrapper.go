@@ -37,7 +37,8 @@ func runCmd(path string, query string, args ...string) (out []byte, err error) {
 		io.WriteString(stdin, query)
 	}()
 
-	out, err = cmd.CombinedOutput()
+	// TODO: error message handling
+	out, err = cmd.Output()
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to run command %s", path)
 	}
