@@ -34,9 +34,9 @@ $ mdqi
 - [x] display results as table
 - [x] convert mdq formatted JSON as table passed by stdin
 - [x] receive command line input
+- [x] query history
 - [ ] load configuration file
 - [ ] remember tag
-- [ ] query history
 
 ## Licence
 
