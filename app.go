@@ -12,6 +12,10 @@ import (
 	"github.com/pkg/errors"
 )
 
+var (
+	ErrNotASlashCommand    = errors.New("there are no SlashCommand")
+)
+
 type App struct {
 	// cmdPath is path to mdq command.
 	cmdPath string
@@ -27,6 +31,12 @@ type Result struct {
 	Database string
 	Columns  []string
 	Rows     []map[string]interface{}
+}
+
+type SlashCommand struct {
+	Category string
+	Name     string
+	Args     []string
 }
 
 func NewApp(conf Conf) (*App, error) {
