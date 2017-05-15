@@ -37,6 +37,7 @@ $ mdqi
 - [x] query history
 - [ ] load configuration file
 - [ ] remember tag
+- [ ] ignore empty query
 
 ## Licence
 
