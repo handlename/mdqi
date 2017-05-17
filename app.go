@@ -13,7 +13,8 @@ import (
 )
 
 var (
-	ErrNotASlashCommand    = errors.New("there are no SlashCommand")
+	ErrSlashCommandNotFound = errors.New("unknown SlashCommand")
+	ErrNotASlashCommand     = errors.New("there are no SlashCommand")
 )
 
 type App struct {
@@ -22,6 +23,10 @@ type App struct {
 
 	// historyPath is path to command history file for liner.
 	historyPath string
+
+	// slashCommandDefinition holds SlashCommandDefinition.
+	// app.slashCommandDefinition[category][name] = SlashCommandDefinition
+	slashCommandDefinition map[string]map[string]SlashCommandDefinition
 }
 
 type Conf struct {
@@ -39,6 +44,12 @@ type SlashCommand struct {
 	Args     []string
 }
 
+type SlashCommandDefinition struct {
+	Category string
+	Name     string
+	Handler  SlashCommandHandler
+}
+
 func NewApp(conf Conf) (*App, error) {
 	// TODO: Check if mdq command exists by exec.LookPath.
 	// TODO: Make historyPath configuarable.
@@ -49,8 +60,9 @@ func NewApp(conf Conf) (*App, error) {
 	}
 
 	return &App{
-		cmdPath:     "mdq",
-		historyPath: historyPath,
+		cmdPath:                "mdq",
+		historyPath:            historyPath,
+		slashCommandDefinition: map[string]map[string]SlashCommandDefinition{},
 	}, nil
 }
 

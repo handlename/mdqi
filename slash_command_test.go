@@ -1,6 +1,7 @@
 package mdqi
 
 import (
+	"fmt"
 	"reflect"
 	"testing"
 )
@@ -63,6 +64,74 @@ func TestParseSlashCommand(t *testing.T) {
 
 		if err != pattern.Expected.Error {
 			t.Error("unexpected error:", err)
+		}
+	}
+}
+
+func TestRegisterSlashCommandDefinition(t *testing.T) {
+	ErrTest := fmt.Errorf("error for test")
+
+	app, _ := NewApp(Conf{})
+
+	handler := func(app *App, cmd *SlashCommand) error {
+		return ErrTest
+	}
+
+	if err := app.RegisterSlashCommand("tag", "", handler); err != nil {
+		t.Fatal("unexpected error:", err)
+	}
+
+	if app.slashCommandDefinition["tag"] == nil {
+		t.Fatal("there are no category map")
+	}
+
+	def := app.slashCommandDefinition["tag"][""]
+
+	if c := def.Category; c != "tag" {
+		t.Fatal("unexpected category:", c)
+	}
+
+	if n := def.Name; n != "" {
+		t.Fatal("unexpected name:", n)
+	}
+
+	if err := def.Handler(app, nil); err != ErrTest {
+		t.Fatal("unexpected handler")
+	}
+}
+
+func TestFindSlashCommandDefinition(t *testing.T) {
+	app, _ := NewApp(Conf{})
+
+	app.slashCommandDefinition["tag"] = map[string]SlashCommandDefinition{}
+	app.slashCommandDefinition["tag"]["set"] = SlashCommandDefinition{
+		Category: "tag",
+		Name:     "set",
+	}
+
+	// registered definition
+	{
+		def, err := app.FindSlashCommandDefinition("tag", "set")
+
+		if err != nil {
+			t.Error("unexpected error:", err)
+		}
+
+		if def.Category != "tag" || def.Name != "set" {
+			t.Errorf("unexpected definition: %+v", def)
+		}
+	}
+
+	// unknown definition
+	{
+		def, err := app.FindSlashCommandDefinition("tag", "remove")
+
+		if err != ErrSlashCommandNotFound {
+			t.Error("expected error")
+		}
+
+		if def.Category != "" {
+			t.Errorf("unexpected definition: %#v", def)
 		}
 	}
 }
