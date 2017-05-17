@@ -38,6 +38,8 @@ $ mdqi
 - [ ] load configuration file
 - [ ] remember tag
 - [ ] ignore empty query
+- [ ] logger
+- [ ] supports `\G`
 
 ## Licence
 
