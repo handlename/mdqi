@@ -126,19 +126,10 @@ LOOP:
 		case nil:
 			scmd, _ := ParseSlashCommand(l)
 			if scmd != nil {
-				sdef, err := app.FindSlashCommandDefinition(scmd.Category, scmd.Name)
-
-				switch err {
-				case nil:
-					if err := sdef.Handler(app, scmd); err != nil {
-						fmt.Fprintln(os.Stderr, "failed to handle slash command:", err)
-					}
-				case ErrSlashCommandNotFound:
-					fmt.Fprintln(os.Stderr, "unknown slash command")
-				}
-
+				app.runSlashCommand(scmd)
 				continue
 			}
+
 			results, err := app.RunCmd(strings.Trim(l, " \n"))
 			if err != nil {
 				fmt.Fprintln(os.Stderr, err.Error())
@@ -168,4 +159,19 @@ LOOP:
 			fmt.Fprintln(os.Stderr, "failed to create history file: ", err)
 		}
 	}
+}
+
+func (app *App) runSlashCommand(scmd *SlashCommand) {
+	sdef, err := app.FindSlashCommandDefinition(scmd.Category, scmd.Name)
+
+	switch err {
+	case nil:
+		if err := sdef.Handler(app, scmd); err != nil {
+			fmt.Fprintln(os.Stderr, "failed to handle slash command:", err)
+		}
+	case ErrSlashCommandNotFound:
+		fmt.Fprintln(os.Stderr, "unknown slash command")
+	}
+
+	return
 }
