@@ -127,20 +127,20 @@ LOOP:
 
 			results, err := app.RunCmd(strings.Trim(l, " \n"))
 			if err != nil {
-				fmt.Fprintln(os.Stderr, err.Error())
+				logger.Println(err.Error())
 			}
 
 			Print(results)
 
 			line.AppendHistory(l)
 		case liner.ErrPromptAborted:
-			fmt.Fprintln(os.Stderr, "aborted")
+			logger.Println("aborted")
 			break LOOP
 		case io.EOF:
 			fmt.Println("bye")
 			break LOOP
 		default:
-			fmt.Fprintln(os.Stderr, "error on reading line: ", err)
+			logger.Println("error on reading line: ", err)
 			break LOOP
 		}
 
@@ -153,19 +153,19 @@ func (app *App) initHistory(line *liner.State) {
 		line.ReadHistory(f)
 		f.Close()
 	} else {
-		fmt.Fprintln(os.Stderr, "failed to read command history: ", err)
+		logger.Println("failed to read command history: ", err)
 	}
 }
 
 func (app *App) saveHistory(line *liner.State) {
 	if f, err := os.Create(app.historyPath); err == nil {
 		if _, err := line.WriteHistory(f); err != nil {
-			fmt.Fprintln(os.Stderr, "failed to write history: ", err)
+			logger.Println("failed to write history: ", err)
 		}
 
 		f.Close()
 	} else {
-		fmt.Fprintln(os.Stderr, "failed to create history file: ", err)
+		logger.Println("failed to create history file: ", err)
 	}
 }
 
@@ -175,10 +175,10 @@ func (app *App) runSlashCommand(scmd *SlashCommand) {
 	switch err {
 	case nil:
 		if err := sdef.Handler(app, scmd); err != nil {
-			fmt.Fprintln(os.Stderr, "failed to handle slash command:", err)
+			logger.Println("failed to handle slash command:", err)
 		}
 	case ErrSlashCommandNotFound:
-		fmt.Fprintln(os.Stderr, "unknown slash command")
+		logger.Println("unknown slash command")
 	}
 
 	return

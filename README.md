@@ -35,10 +35,12 @@ $ mdqi
 - [x] convert mdq formatted JSON as table passed by stdin
 - [x] receive command line input
 - [x] query history
+- [x] logger
+- [ ] slash command
+    - [x] `/quit`
+    - [ ] `/tag (set|remove|show)`
 - [ ] load configuration file
-- [ ] remember tag
 - [ ] ignore empty query
-- [ ] logger
 - [ ] supports `\G`
 
 ## Licence

@@ -1,8 +1,6 @@
 package mdqi
 
 import (
-	"fmt"
-	"os"
 	"reflect"
 	"regexp"
 )
@@ -41,7 +39,7 @@ func ParseSlashCommand(query string) (*SlashCommand, error) {
 func (app *App) RegisterSlashCommand(category, name string, fn SlashCommandHandler) error {
 	if c := app.slashCommandDefinition[category]; c != nil {
 		if !reflect.DeepEqual(c[name], SlashCommandDefinition{}) {
-			fmt.Fprintf(os.Stderr, "there are definition for same category(=%s) and name(=%s), so current one will be overwritten.", category, name)
+			logger.Printf("there are definition for same category(=%s) and name(=%s), so current one will be overwritten.", category, name)
 		}
 	}
 
