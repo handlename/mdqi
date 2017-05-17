@@ -106,12 +106,7 @@ func (app *App) runLiner() {
 
 	line.SetCtrlCAborts(true)
 
-	if f, err := os.Open(app.historyPath); err == nil {
-		line.ReadHistory(f)
-		f.Close()
-	} else {
-		fmt.Fprintln(os.Stderr, "failed to read command history: ", err)
-	}
+	app.initHistory(line)
 
 LOOP:
 	for {
@@ -149,15 +144,28 @@ LOOP:
 			break LOOP
 		}
 
-		if f, err := os.Create(app.historyPath); err == nil {
-			if _, err := line.WriteHistory(f); err != nil {
-				fmt.Fprintln(os.Stderr, "failed to write history: ", err)
-			}
+		app.saveHistory(line)
+	}
+}
 
-			f.Close()
-		} else {
-			fmt.Fprintln(os.Stderr, "failed to create history file: ", err)
+func (app *App) initHistory(line *liner.State) {
+	if f, err := os.Open(app.historyPath); err == nil {
+		line.ReadHistory(f)
+		f.Close()
+	} else {
+		fmt.Fprintln(os.Stderr, "failed to read command history: ", err)
+	}
+}
+
+func (app *App) saveHistory(line *liner.State) {
+	if f, err := os.Create(app.historyPath); err == nil {
+		if _, err := line.WriteHistory(f); err != nil {
+			fmt.Fprintln(os.Stderr, "failed to write history: ", err)
 		}
+
+		f.Close()
+	} else {
+		fmt.Fprintln(os.Stderr, "failed to create history file: ", err)
 	}
 }
 
