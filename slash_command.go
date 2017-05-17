@@ -71,3 +71,8 @@ func (app *App) FindSlashCommandDefinition(category, name string) (SlashCommandD
 
 	return c[name], nil
 }
+
+func SlashCommandExit(app *App, cmd *SlashCommand) error {
+	app.Alive = false
+	return nil
+}

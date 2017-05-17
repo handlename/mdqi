@@ -18,6 +18,9 @@ var (
 )
 
 type App struct {
+	// Alive turns into false, mdqi will exit.
+	Alive bool
+
 	// cmdPath is path to mdq command.
 	cmdPath string
 
@@ -59,11 +62,17 @@ func NewApp(conf Conf) (*App, error) {
 		return nil, errors.Wrap(err, "failed to create history file")
 	}
 
-	return &App{
+	app := &App{
+		Alive: true,
+
 		cmdPath:                "mdq",
 		historyPath:            historyPath,
 		slashCommandDefinition: map[string]map[string]SlashCommandDefinition{},
-	}, nil
+	}
+
+	app.initSlashCommands()
+
+	return app, nil
 }
 
 func createHistoryFile() (string, error) {
@@ -81,6 +90,10 @@ func createHistoryFile() (string, error) {
 	}
 
 	return path, nil
+}
+
+func (app *App) initSlashCommands() {
+	app.RegisterSlashCommand("exit", "", SlashCommandExit)
 }
 
 func (app *App) Run() {
@@ -102,10 +115,30 @@ func (app *App) runLiner() {
 
 LOOP:
 	for {
+		if !app.Alive {
+			fmt.Println("bye")
+			break LOOP
+		}
+
 		l, err := line.Prompt("mdq> ")
 
 		switch err {
 		case nil:
+			scmd, _ := ParseSlashCommand(l)
+			if scmd != nil {
+				sdef, err := app.FindSlashCommandDefinition(scmd.Category, scmd.Name)
+
+				switch err {
+				case nil:
+					if err := sdef.Handler(app, scmd); err != nil {
+						fmt.Fprintln(os.Stderr, "failed to handle slash command:", err)
+					}
+				case ErrSlashCommandNotFound:
+					fmt.Fprintln(os.Stderr, "unknown slash command")
+				}
+
+				continue
+			}
 			results, err := app.RunCmd(strings.Trim(l, " \n"))
 			if err != nil {
 				fmt.Fprintln(os.Stderr, err.Error())
