@@ -135,3 +135,13 @@ func TestFindSlashCommandDefinition(t *testing.T) {
 		}
 	}
 }
+
+func TestSlashCommandExit(t *testing.T) {
+	app, _ := NewApp(Conf{})
+
+	SlashCommandExit(app, nil)
+
+	if app.Alive {
+		t.Fatal("app.Alive must be false.")
+	}
+}
