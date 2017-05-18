@@ -145,3 +145,15 @@ func TestSlashCommandExit(t *testing.T) {
 		t.Fatal("app.Alive must be false.")
 	}
 }
+
+func TestSlashCommandTagAdd(t *testing.T) {
+	app, _ := NewApp(Conf{})
+
+	SlashCommandTagAdd(app, &SlashCommand{
+		Args: []string{"db1"},
+	})
+
+	if tag := app.GetTags()[0]; tag != "db1" {
+		t.Fatal("unexpected tag:", tag)
+	}
+}

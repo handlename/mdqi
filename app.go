@@ -97,6 +97,7 @@ func createHistoryFile() (string, error) {
 
 func (app *App) initSlashCommands() {
 	app.RegisterSlashCommand("exit", "", SlashCommandExit)
+	app.RegisterSlashCommand("tag", "add", SlashCommandTagAdd)
 }
 
 func (app *App) Run() {

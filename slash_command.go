@@ -73,3 +73,14 @@ func SlashCommandExit(app *App, cmd *SlashCommand) error {
 	app.Alive = false
 	return nil
 }
+
+func SlashCommandTagAdd(app *App, cmd *SlashCommand) error {
+	if len(cmd.Args) != 1 {
+		logger.Println("usage: /tag add {tagname}")
+		return nil
+	}
+
+	app.AddTag(cmd.Args[0])
+
+	return nil
+}
