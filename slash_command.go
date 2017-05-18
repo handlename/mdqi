@@ -81,6 +81,7 @@ func SlashCommandTagAdd(app *App, cmd *SlashCommand) error {
 	}
 
 	app.AddTag(cmd.Args[0])
+	debug.Printf("tag added: %+v\n", app.GetTags())
 
 	return nil
 }
