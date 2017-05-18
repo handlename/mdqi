@@ -129,6 +129,8 @@ LOOP:
 				continue
 			}
 
+			line.AppendHistory(l)
+
 			scmd, _ := ParseSlashCommand(l)
 			if scmd != nil {
 				app.runSlashCommand(scmd)
@@ -141,8 +143,6 @@ LOOP:
 			}
 
 			Print(results)
-
-			line.AppendHistory(l)
 		case liner.ErrPromptAborted:
 			logger.Println("aborted")
 			break LOOP
