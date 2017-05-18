@@ -40,8 +40,8 @@ $ mdqi
 - [ ] slash command
     - [x] `/quit`
     - [ ] `/tag (set|remove|show)`
+    - [ ] `/display (vertical|horizontal)`
 - [ ] load configuration file
-- [ ] supports `\G`
 
 ## Licence
 
