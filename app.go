@@ -30,6 +30,9 @@ type App struct {
 	// slashCommandDefinition holds SlashCommandDefinition.
 	// app.slashCommandDefinition[category][name] = SlashCommandDefinition
 	slashCommandDefinition map[string]map[string]SlashCommandDefinition
+
+	// tags stores tag values for --tag option of mdq.
+	tags []string
 }
 
 type Conf struct {
@@ -188,4 +191,41 @@ func (app *App) runSlashCommand(scmd *SlashCommand) {
 	}
 
 	return
+}
+
+func (app *App) GetTags() []string {
+	return app.tags
+}
+
+func (app *App) AddTag(tag string) {
+	if 0 <= app.searchTag(tag) {
+		// already added.
+		return
+	}
+
+	app.tags = append(app.tags, tag)
+}
+
+func (app *App) RemoveTag(tag string) {
+	index := app.searchTag(tag)
+
+	if index < 0 {
+		// not exists.
+		return
+	}
+
+	app.tags = append(app.tags[:index], app.tags[index+1:]...)
+}
+
+func (app *App) searchTag(tag string) (index int) {
+	index = -1
+
+	for i, t := range app.tags {
+		if tag == t {
+			index = i
+			break
+		}
+	}
+
+	return index
 }
