@@ -42,6 +42,7 @@ $ mdqi
     - [ ] `/tag (set|remove|show)`
     - [ ] `/display (vertical|horizontal)`
 - [ ] load configuration file
+- [ ] CircleCI
 
 ## Licence
 
