@@ -14,6 +14,10 @@ func Print(results []Result) error {
 }
 
 func Fprint(out io.Writer, results []Result) error {
+	if len(results) == 0 {
+		return nil
+	}
+
 	printer := tablewriter.NewWriter(out)
 	printer.SetAlignment(tablewriter.ALIGN_LEFT)
 

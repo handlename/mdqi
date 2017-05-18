@@ -60,6 +60,13 @@ func TestPrinter(t *testing.T) {
 	}
 }
 
+func TestPrinterWithEmptyResults(t *testing.T) {
+	// avoid panic
+	if err := Print([]Result{}); err != nil {
+		t.Error("unexpected error:", err)
+	}
+}
+
 func compareAfterTrim(a, b string, cutset string) bool {
 	return strings.Trim(a, cutset) == strings.Trim(b, cutset)
 }
