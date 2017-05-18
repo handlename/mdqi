@@ -36,11 +36,11 @@ $ mdqi
 - [x] receive command line input
 - [x] query history
 - [x] logger
+- [x] ignore empty query
 - [ ] slash command
     - [x] `/quit`
     - [ ] `/tag (set|remove|show)`
 - [ ] load configuration file
-- [ ] ignore empty query
 - [ ] supports `\G`
 
 ## Licence

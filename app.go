@@ -119,13 +119,19 @@ LOOP:
 
 		switch err {
 		case nil:
+			l = strings.Trim(l, " \n")
+
+			if l == "" {
+				continue
+			}
+
 			scmd, _ := ParseSlashCommand(l)
 			if scmd != nil {
 				app.runSlashCommand(scmd)
 				continue
 			}
 
-			results, err := app.RunCmd(strings.Trim(l, " \n"))
+			results, err := app.RunCmd(l)
 			if err != nil {
 				logger.Println(err.Error())
 			}
