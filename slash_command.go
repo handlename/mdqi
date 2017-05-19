@@ -6,8 +6,8 @@ import (
 
 type SlashCommandHandler func(app *App, cmd *SlashCommand) error
 
-// /category [ cmd [ arg1 [ arg2 ]... ] ]
-var slashCommandRegexp = regexp.MustCompile("^/([a-z]+)(?: ([a-z]+)(?: ([-_a-zA-Z0-9]+))+)? *$")
+// /category [ cmd [ name [ arg1 [ arg2 ]... ] ] ]
+var slashCommandRegexp = regexp.MustCompile("^/([a-z]+)(?: ([a-z]+)(?: ([-_a-zA-Z0-9]+))*)? *$")
 
 func ParseSlashCommand(query string) (*SlashCommand, error) {
 	matches := slashCommandRegexp.FindAllStringSubmatch(query, -1)

@@ -32,6 +32,18 @@ func TestParseSlashCommand(t *testing.T) {
 			},
 		},
 		Pattern{
+			Title: "command with name",
+			Query: "/tag show",
+			Expected: Expected{
+				Result: &SlashCommand{
+					Category: "tag",
+					Name:     "show",
+					Args:     []string{},
+				},
+				Error: nil,
+			},
+		},
+		Pattern{
 			Title: "command with options",
 			Query: "/tag set db1",
 			Expected: Expected{
