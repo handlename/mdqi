@@ -3,13 +3,14 @@ package mdqi
 import (
 	"fmt"
 	"io"
-	"os"
 
 	"github.com/olekukonko/tablewriter"
 )
 
+var defaultOutput io.Writer
+
 func Print(results []Result) error {
-	Fprint(os.Stdout, results)
+	Fprint(defaultOutput, results)
 	return nil
 }
 

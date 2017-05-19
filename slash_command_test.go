@@ -1,6 +1,7 @@
 package mdqi
 
 import (
+	"bytes"
 	"fmt"
 	"reflect"
 	"testing"
@@ -182,5 +183,36 @@ func TestSlashCommandTagRemove(t *testing.T) {
 
 	if tags := app.GetTags(); !sortEqual(tags, []string{"db2"}) {
 		t.Fatalf("failed to remove tag: %+v", tags)
+	}
+}
+
+func TestSlashCommandTagShow(t *testing.T) {
+	orgOutput := defaultOutput
+	var out bytes.Buffer
+	defaultOutput = &out
+	defer func() {
+		defaultOutput = orgOutput
+	}()
+
+	app, _ := NewApp(Conf{})
+
+	app.AddTag("db1")
+	app.AddTag("db2")
+
+	SlashCommandTagShow(app, &SlashCommand{
+		Args: []string{"db1"},
+	})
+
+	expect := `
++-------+-----+
+|  DB   | TAG |
++-------+-----+
+| (mdq) | db1 |
+| (mdq) | db2 |
++-------+-----+
+`
+
+	if s := out.String(); !compareAfterTrim(s, expect, " \n") {
+		t.Fatalf("unexpected output:\n%s", s)
 	}
 }

@@ -43,6 +43,7 @@ $ mdqi
     - [ ] `/display (vertical|horizontal)`
 - [ ] load configuration file
 - [ ] CircleCI
+- [ ] command help
 
 ## Licence
 

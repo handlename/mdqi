@@ -56,6 +56,10 @@ type SlashCommandDefinition struct {
 	Handler  SlashCommandHandler
 }
 
+func init() {
+	defaultOutput = os.Stdout
+}
+
 func NewApp(conf Conf) (*App, error) {
 	// TODO: Check if mdq command exists by exec.LookPath.
 	// TODO: Make historyPath configuarable.
@@ -98,6 +102,8 @@ func createHistoryFile() (string, error) {
 func (app *App) initSlashCommands() {
 	app.RegisterSlashCommand("exit", "", SlashCommandExit)
 	app.RegisterSlashCommand("tag", "add", SlashCommandTagAdd)
+	app.RegisterSlashCommand("tag", "remove", SlashCommandTagRemove)
+	app.RegisterSlashCommand("tag", "show", SlashCommandTagShow)
 }
 
 func (app *App) Run() {

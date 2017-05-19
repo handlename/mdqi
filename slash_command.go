@@ -97,3 +97,23 @@ func SlashCommandTagRemove(app *App, cmd *SlashCommand) error {
 
 	return nil
 }
+
+func SlashCommandTagShow(app *App, cmd *SlashCommand) error {
+	rows := []map[string]interface{}{}
+
+	for _, tag := range app.GetTags() {
+		rows = append(rows, map[string]interface{}{"tag": tag})
+	}
+
+	results := []Result{
+		Result{
+			Database: "(mdq)",
+			Columns:  []string{"tag"},
+			Rows:     rows,
+		},
+	}
+
+	Print(results)
+
+	return nil
+}
