@@ -1,19 +1,10 @@
 package mdqi
 
 import (
-	"reflect"
-	"sort"
 	"testing"
 )
 
 func TestManageTags(t *testing.T) {
-	sortEqual := func(a, b []string) bool {
-		sort.Strings(a)
-		sort.Strings(b)
-
-		return reflect.DeepEqual(a, b)
-	}
-
 	app, _ := NewApp(Conf{})
 
 	if tags := app.GetTags(); len(tags) != 0 {
