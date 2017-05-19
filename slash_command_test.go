@@ -157,3 +157,18 @@ func TestSlashCommandTagAdd(t *testing.T) {
 		t.Fatal("unexpected tag:", tag)
 	}
 }
+
+func TestSlashCommandTagRemove(t *testing.T) {
+	app, _ := NewApp(Conf{})
+
+	app.AddTag("db1")
+	app.AddTag("db2")
+
+	SlashCommandTagRemove(app, &SlashCommand{
+		Args: []string{"db1"},
+	})
+
+	if tags := app.GetTags(); !sortEqual(tags, []string{"db2"}) {
+		t.Fatalf("failed to remove tag: %+v", tags)
+	}
+}

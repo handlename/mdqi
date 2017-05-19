@@ -85,3 +85,15 @@ func SlashCommandTagAdd(app *App, cmd *SlashCommand) error {
 
 	return nil
 }
+
+func SlashCommandTagRemove(app *App, cmd *SlashCommand) error {
+	if len(cmd.Args) != 1 {
+		logger.Println("usage: /tag remove {tagname}")
+		return nil
+	}
+
+	app.RemoveTag(cmd.Args[0])
+	debug.Printf("tag removed: %+v\n", app.GetTags())
+
+	return nil
+}
