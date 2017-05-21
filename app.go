@@ -44,18 +44,6 @@ type Result struct {
 	Rows     []map[string]interface{}
 }
 
-type SlashCommand struct {
-	Category string
-	Name     string
-	Args     []string
-}
-
-type SlashCommandDefinition struct {
-	Category string
-	Name     string
-	Handler  SlashCommandHandler
-}
-
 func init() {
 	defaultOutput = os.Stdout
 }

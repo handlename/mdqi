@@ -4,6 +4,18 @@ import (
 	"regexp"
 )
 
+type SlashCommand struct {
+	Category string
+	Name     string
+	Args     []string
+}
+
+type SlashCommandDefinition struct {
+	Category string
+	Name     string
+	Handler  SlashCommandHandler
+}
+
 type SlashCommandHandler func(app *App, cmd *SlashCommand) error
 
 // /category [ cmd [ name [ arg1 [ arg2 ]... ] ] ]
