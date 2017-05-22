@@ -13,6 +13,7 @@ type TestDef struct{}
 
 func (d TestDef) Category() string { return "test" }
 func (d TestDef) Name() string     { return "foo" }
+func (d TestDef) Help() string     { return "" }
 func (d TestDef) Handle(app *App, cmd *SlashCommand) error {
 	return ErrTest
 }

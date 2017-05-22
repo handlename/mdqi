@@ -1,6 +1,7 @@
 package mdqi
 
 import (
+	"fmt"
 	"regexp"
 )
 
@@ -13,6 +14,7 @@ type SlashCommand struct {
 type SlashCommandDefinition interface {
 	Category() string
 	Name() string
+	Help() string
 	Handle(app *App, cmd *SlashCommand) error
 }
 
@@ -82,6 +84,11 @@ type SlashCommandExit struct{}
 
 func (c SlashCommandExit) Category() string { return "exit" }
 func (c SlashCommandExit) Name() string     { return "" }
+
+func (c SlashCommandExit) Help() string {
+	return "/exit\n\tExit mdqi."
+}
+
 func (c SlashCommandExit) Handle(app *App, cmd *SlashCommand) error {
 	app.Alive = false
 	return nil
@@ -91,9 +98,14 @@ type SlashCommandTagAdd struct{}
 
 func (c SlashCommandTagAdd) Category() string { return "tag" }
 func (c SlashCommandTagAdd) Name() string     { return "add" }
+
+func (c SlashCommandTagAdd) Help() string {
+	return "/tag add {tagname}\n\tAdd tag to pass to mdq's --tag option."
+}
+
 func (c SlashCommandTagAdd) Handle(app *App, cmd *SlashCommand) error {
 	if len(cmd.Args) != 1 {
-		logger.Println("usage: /tag add {tagname}")
+		fmt.Println(c.Help())
 		return nil
 	}
 
@@ -107,9 +119,14 @@ type SlashCommandTagRemove struct{}
 
 func (c SlashCommandTagRemove) Category() string { return "tag" }
 func (c SlashCommandTagRemove) Name() string     { return "remove" }
+
+func (c SlashCommandTagRemove) Help() string {
+	return "/tag remove {tagname}\n\tRemove from tags to pass to mdq's --tag option."
+}
+
 func (c SlashCommandTagRemove) Handle(app *App, cmd *SlashCommand) error {
 	if len(cmd.Args) != 1 {
-		logger.Println("usage: /tag remove {tagname}")
+		fmt.Println(c.Help())
 		return nil
 	}
 
@@ -123,6 +140,11 @@ type SlashCommandTagShow struct{}
 
 func (c SlashCommandTagShow) Category() string { return "tag" }
 func (c SlashCommandTagShow) Name() string     { return "show" }
+
+func (c SlashCommandTagShow) Help() string {
+	return "/tag show\n\tShow registered tags to pass to mdq's --tag option."
+}
+
 func (c SlashCommandTagShow) Handle(app *App, cmd *SlashCommand) error {
 	rows := []map[string]interface{}{}
 
