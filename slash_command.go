@@ -10,13 +10,11 @@ type SlashCommand struct {
 	Args     []string
 }
 
-type SlashCommandDefinition struct {
-	Category string
-	Name     string
-	Handler  SlashCommandHandler
+type SlashCommandDefinition interface {
+	Category() string
+	Name() string
+	Handle(app *App, cmd *SlashCommand) error
 }
-
-type SlashCommandHandler func(app *App, cmd *SlashCommand) error
 
 // /category [ cmd [ name [ arg1 [ arg2 ]... ] ] ]
 var slashCommandRegexp = regexp.MustCompile("^/([a-z]+)(?: ([a-z]+)(?: ([-_a-zA-Z0-9]+))*)? *$")
@@ -47,9 +45,12 @@ func ParseSlashCommand(query string) (*SlashCommand, error) {
 	}, nil
 }
 
-func (app *App) RegisterSlashCommand(category, name string, fn SlashCommandHandler) error {
+func (app *App) RegisterSlashCommandDefinition(d SlashCommandDefinition) error {
+	category := d.Category()
+	name := d.Name()
+
 	if c := app.slashCommandDefinition[category]; c != nil {
-		if name == c[name].Name {
+		if c[name] != nil {
 			logger.Printf("there are definition for same category(=%s) and name(=%s), so current one will be overwritten.", category, name)
 		}
 	}
@@ -58,11 +59,7 @@ func (app *App) RegisterSlashCommand(category, name string, fn SlashCommandHandl
 		app.slashCommandDefinition[category] = map[string]SlashCommandDefinition{}
 	}
 
-	app.slashCommandDefinition[category][name] = SlashCommandDefinition{
-		Category: category,
-		Name:     name,
-		Handler:  fn,
-	}
+	app.slashCommandDefinition[category][name] = d
 
 	return nil
 }
@@ -71,22 +68,30 @@ func (app *App) FindSlashCommandDefinition(category, name string) (SlashCommandD
 	c := app.slashCommandDefinition[category]
 
 	if c == nil {
-		return SlashCommandDefinition{}, ErrSlashCommandNotFound
+		return nil, ErrSlashCommandNotFound
 	}
 
-	if c[name].Category == "" {
-		return SlashCommandDefinition{}, ErrSlashCommandNotFound
+	if c[name] == nil {
+		return nil, ErrSlashCommandNotFound
 	}
 
 	return c[name], nil
 }
 
-func SlashCommandExit(app *App, cmd *SlashCommand) error {
+type SlashCommandExit struct{}
+
+func (c SlashCommandExit) Category() string { return "exit" }
+func (c SlashCommandExit) Name() string     { return "" }
+func (c SlashCommandExit) Handle(app *App, cmd *SlashCommand) error {
 	app.Alive = false
 	return nil
 }
 
-func SlashCommandTagAdd(app *App, cmd *SlashCommand) error {
+type SlashCommandTagAdd struct{}
+
+func (c SlashCommandTagAdd) Category() string { return "tag" }
+func (c SlashCommandTagAdd) Name() string     { return "add" }
+func (c SlashCommandTagAdd) Handle(app *App, cmd *SlashCommand) error {
 	if len(cmd.Args) != 1 {
 		logger.Println("usage: /tag add {tagname}")
 		return nil
@@ -98,7 +103,11 @@ func SlashCommandTagAdd(app *App, cmd *SlashCommand) error {
 	return nil
 }
 
-func SlashCommandTagRemove(app *App, cmd *SlashCommand) error {
+type SlashCommandTagRemove struct{}
+
+func (c SlashCommandTagRemove) Category() string { return "tag" }
+func (c SlashCommandTagRemove) Name() string     { return "remove" }
+func (c SlashCommandTagRemove) Handle(app *App, cmd *SlashCommand) error {
 	if len(cmd.Args) != 1 {
 		logger.Println("usage: /tag remove {tagname}")
 		return nil
@@ -110,7 +119,11 @@ func SlashCommandTagRemove(app *App, cmd *SlashCommand) error {
 	return nil
 }
 
-func SlashCommandTagShow(app *App, cmd *SlashCommand) error {
+type SlashCommandTagShow struct{}
+
+func (c SlashCommandTagShow) Category() string { return "tag" }
+func (c SlashCommandTagShow) Name() string     { return "show" }
+func (c SlashCommandTagShow) Handle(app *App, cmd *SlashCommand) error {
 	rows := []map[string]interface{}{}
 
 	for _, tag := range app.GetTags() {

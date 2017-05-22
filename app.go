@@ -88,10 +88,10 @@ func createHistoryFile() (string, error) {
 }
 
 func (app *App) initSlashCommands() {
-	app.RegisterSlashCommand("exit", "", SlashCommandExit)
-	app.RegisterSlashCommand("tag", "add", SlashCommandTagAdd)
-	app.RegisterSlashCommand("tag", "remove", SlashCommandTagRemove)
-	app.RegisterSlashCommand("tag", "show", SlashCommandTagShow)
+	app.RegisterSlashCommandDefinition(SlashCommandExit{})
+	app.RegisterSlashCommandDefinition(SlashCommandTagAdd{})
+	app.RegisterSlashCommandDefinition(SlashCommandTagRemove{})
+	app.RegisterSlashCommandDefinition(SlashCommandTagShow{})
 }
 
 func (app *App) Run() {
@@ -178,7 +178,7 @@ func (app *App) runSlashCommand(scmd *SlashCommand) {
 
 	switch err {
 	case nil:
-		if err := sdef.Handler(app, scmd); err != nil {
+		if err := sdef.Handle(app, scmd); err != nil {
 			logger.Println("failed to handle slash command:", err)
 		}
 	case ErrSlashCommandNotFound:

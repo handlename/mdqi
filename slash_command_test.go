@@ -2,10 +2,20 @@ package mdqi
 
 import (
 	"bytes"
-	"fmt"
+	"errors"
 	"reflect"
 	"testing"
 )
+
+var ErrTest = errors.New("error for test")
+
+type TestDef struct{}
+
+func (d TestDef) Category() string { return "test" }
+func (d TestDef) Name() string     { return "foo" }
+func (d TestDef) Handle(app *App, cmd *SlashCommand) error {
+	return ErrTest
+}
 
 func TestParseSlashCommand(t *testing.T) {
 	type Expected struct {
@@ -82,68 +92,66 @@ func TestParseSlashCommand(t *testing.T) {
 }
 
 func TestRegisterSlashCommandDefinition(t *testing.T) {
-	ErrTest := fmt.Errorf("error for test")
-
 	app, _ := NewApp(Conf{})
 
-	handler := func(app *App, cmd *SlashCommand) error {
-		return ErrTest
-	}
-
-	if err := app.RegisterSlashCommand("tag", "", handler); err != nil {
+	if err := app.RegisterSlashCommandDefinition(TestDef{}); err != nil {
 		t.Fatal("unexpected error:", err)
 	}
 
-	if app.slashCommandDefinition["tag"] == nil {
+	if app.slashCommandDefinition["test"] == nil {
 		t.Fatal("there are no category map")
 	}
 
-	def := app.slashCommandDefinition["tag"][""]
+	def := app.slashCommandDefinition["test"]["foo"]
 
-	if c := def.Category; c != "tag" {
+	if def == nil {
+		t.Fatal("there are no definition")
+	}
+
+	if c := def.Category(); c != "test" {
 		t.Fatal("unexpected category:", c)
 	}
 
-	if n := def.Name; n != "" {
+	if n := def.Name(); n != "foo" {
 		t.Fatal("unexpected name:", n)
 	}
 
-	if err := def.Handler(app, nil); err != ErrTest {
-		t.Fatal("unexpected handler")
+	if err := def.Handle(app, nil); err != ErrTest {
+		t.Fatalf("unexpected handler returns error: %s", err)
 	}
 }
 
 func TestFindSlashCommandDefinition(t *testing.T) {
 	app, _ := NewApp(Conf{})
-
-	app.slashCommandDefinition["tag"] = map[string]SlashCommandDefinition{}
-	app.slashCommandDefinition["tag"]["set"] = SlashCommandDefinition{
-		Category: "tag",
-		Name:     "set",
-	}
+	app.slashCommandDefinition["test"] = map[string]SlashCommandDefinition{}
+	app.slashCommandDefinition["test"]["foo"] = TestDef{}
 
 	// registered definition
 	{
-		def, err := app.FindSlashCommandDefinition("tag", "set")
+		def, err := app.FindSlashCommandDefinition("test", "foo")
 
 		if err != nil {
 			t.Error("unexpected error:", err)
 		}
 
-		if def.Category != "tag" || def.Name != "set" {
-			t.Errorf("unexpected definition: %+v", def)
+		if def == nil {
+			t.Error("definition must be returned.")
+		}
+
+		if def.Category() != "test" || def.Name() != "foo" {
+			t.Errorf("unexpected definition: %#v", def)
 		}
 	}
 
 	// unknown definition
 	{
-		def, err := app.FindSlashCommandDefinition("tag", "remove")
+		def, err := app.FindSlashCommandDefinition("test", "bar")
 
 		if err != ErrSlashCommandNotFound {
 			t.Error("expected error")
 		}
 
-		if def.Category != "" {
+		if def != nil {
 			t.Errorf("unexpected definition: %#v", def)
 		}
 	}
@@ -152,7 +160,8 @@ func TestFindSlashCommandDefinition(t *testing.T) {
 func TestSlashCommandExit(t *testing.T) {
 	app, _ := NewApp(Conf{})
 
-	SlashCommandExit(app, nil)
+	def := SlashCommandExit{}
+	def.Handle(app, nil)
 
 	if app.Alive {
 		t.Fatal("app.Alive must be false.")
@@ -162,7 +171,8 @@ func TestSlashCommandExit(t *testing.T) {
 func TestSlashCommandTagAdd(t *testing.T) {
 	app, _ := NewApp(Conf{})
 
-	SlashCommandTagAdd(app, &SlashCommand{
+	def := SlashCommandTagAdd{}
+	def.Handle(app, &SlashCommand{
 		Args: []string{"db1"},
 	})
 
@@ -177,7 +187,8 @@ func TestSlashCommandTagRemove(t *testing.T) {
 	app.AddTag("db1")
 	app.AddTag("db2")
 
-	SlashCommandTagRemove(app, &SlashCommand{
+	def := SlashCommandTagRemove{}
+	def.Handle(app, &SlashCommand{
 		Args: []string{"db1"},
 	})
 
@@ -199,7 +210,8 @@ func TestSlashCommandTagShow(t *testing.T) {
 	app.AddTag("db1")
 	app.AddTag("db2")
 
-	SlashCommandTagShow(app, &SlashCommand{
+	def := SlashCommandTagShow{}
+	def.Handle(app, &SlashCommand{
 		Args: []string{"db1"},
 	})
 
