@@ -9,12 +9,23 @@ import (
 
 var ErrTest = errors.New("error for test")
 
-type TestDef struct{}
+type TestDefFoo struct{}
 
-func (d TestDef) Category() string { return "test" }
-func (d TestDef) Name() string     { return "foo" }
-func (d TestDef) Help() string     { return "" }
-func (d TestDef) Handle(app *App, cmd *SlashCommand) error {
+func (d TestDefFoo) Category() string { return "test" }
+func (d TestDefFoo) Name() string     { return "foo" }
+func (d TestDefFoo) Example() string  { return "/test foo" }
+func (d TestDefFoo) Help() string     { return "I'm foo." }
+func (d TestDefFoo) Handle(app *App, cmd *SlashCommand) error {
+	return ErrTest
+}
+
+type TestDefBar struct{}
+
+func (d TestDefBar) Category() string { return "test" }
+func (d TestDefBar) Name() string     { return "bar" }
+func (d TestDefBar) Example() string  { return "/test bar" }
+func (d TestDefBar) Help() string     { return "I'm bar." }
+func (d TestDefBar) Handle(app *App, cmd *SlashCommand) error {
 	return ErrTest
 }
 
@@ -95,7 +106,7 @@ func TestParseSlashCommand(t *testing.T) {
 func TestRegisterSlashCommandDefinition(t *testing.T) {
 	app, _ := NewApp(Conf{})
 
-	if err := app.RegisterSlashCommandDefinition(TestDef{}); err != nil {
+	if err := app.RegisterSlashCommandDefinition(TestDefFoo{}); err != nil {
 		t.Fatal("unexpected error:", err)
 	}
 
@@ -125,7 +136,7 @@ func TestRegisterSlashCommandDefinition(t *testing.T) {
 func TestFindSlashCommandDefinition(t *testing.T) {
 	app, _ := NewApp(Conf{})
 	app.slashCommandDefinition["test"] = map[string]SlashCommandDefinition{}
-	app.slashCommandDefinition["test"]["foo"] = TestDef{}
+	app.slashCommandDefinition["test"]["foo"] = TestDefFoo{}
 
 	// registered definition
 	{
@@ -223,6 +234,37 @@ func TestSlashCommandTagShow(t *testing.T) {
 | (mdq) | db1 |
 | (mdq) | db2 |
 +-------+-----+
+`
+
+	if s := out.String(); !compareAfterTrim(s, expect, " \n") {
+		t.Fatalf("unexpected output:\n%s", s)
+	}
+}
+
+func TestSlashCommandHelp(t *testing.T) {
+	orgOutput := defaultOutput
+	var out bytes.Buffer
+	defaultOutput = &out
+	defer func() {
+		defaultOutput = orgOutput
+	}()
+
+	app, _ := NewApp(Conf{})
+	app.slashCommandDefinition = map[string]map[string]SlashCommandDefinition{}
+
+	app.RegisterSlashCommandDefinition(TestDefFoo{})
+	app.RegisterSlashCommandDefinition(TestDefBar{})
+
+	def := SlashCommandHelp{}
+	def.Handle(app, &SlashCommand{})
+
+	expect := `
++-------+----------+------+-----------+----------+
+|  DB   | CATEGORY | NAME |  EXAMPLE  |   HELP   |
++-------+----------+------+-----------+----------+
+| (mdq) | test     | foo  | /test foo | I'm foo. |
+| (mdq) | test     | bar  | /test bar | I'm bar. |
++-------+----------+------+-----------+----------+
 `
 
 	if s := out.String(); !compareAfterTrim(s, expect, " \n") {

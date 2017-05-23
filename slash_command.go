@@ -14,6 +14,7 @@ type SlashCommand struct {
 type SlashCommandDefinition interface {
 	Category() string
 	Name() string
+	Example() string
 	Help() string
 	Handle(app *App, cmd *SlashCommand) error
 }
@@ -84,9 +85,10 @@ type SlashCommandExit struct{}
 
 func (c SlashCommandExit) Category() string { return "exit" }
 func (c SlashCommandExit) Name() string     { return "" }
+func (c SlashCommandExit) Example() string  { return "/exit" }
 
 func (c SlashCommandExit) Help() string {
-	return "/exit\n\tExit mdqi."
+	return "Exit mdqi."
 }
 
 func (c SlashCommandExit) Handle(app *App, cmd *SlashCommand) error {
@@ -98,9 +100,10 @@ type SlashCommandTagAdd struct{}
 
 func (c SlashCommandTagAdd) Category() string { return "tag" }
 func (c SlashCommandTagAdd) Name() string     { return "add" }
+func (c SlashCommandTagAdd) Example() string  { return "/tag add {tagname}" }
 
 func (c SlashCommandTagAdd) Help() string {
-	return "/tag add {tagname}\n\tAdd tag to pass to mdq's --tag option."
+	return "Add tag to pass to mdq's --tag option."
 }
 
 func (c SlashCommandTagAdd) Handle(app *App, cmd *SlashCommand) error {
@@ -119,9 +122,10 @@ type SlashCommandTagRemove struct{}
 
 func (c SlashCommandTagRemove) Category() string { return "tag" }
 func (c SlashCommandTagRemove) Name() string     { return "remove" }
+func (c SlashCommandTagRemove) Example() string  { return "/tag remove {tagname}" }
 
 func (c SlashCommandTagRemove) Help() string {
-	return "/tag remove {tagname}\n\tRemove from tags to pass to mdq's --tag option."
+	return "Remove from tags to pass to mdq's --tag option."
 }
 
 func (c SlashCommandTagRemove) Handle(app *App, cmd *SlashCommand) error {
@@ -140,9 +144,10 @@ type SlashCommandTagShow struct{}
 
 func (c SlashCommandTagShow) Category() string { return "tag" }
 func (c SlashCommandTagShow) Name() string     { return "show" }
+func (c SlashCommandTagShow) Example() string  { return "/tag show" }
 
 func (c SlashCommandTagShow) Help() string {
-	return "/tag show\n\tShow registered tags to pass to mdq's --tag option."
+	return "Show registered tags to pass to mdq's --tag option."
 }
 
 func (c SlashCommandTagShow) Handle(app *App, cmd *SlashCommand) error {
@@ -156,6 +161,43 @@ func (c SlashCommandTagShow) Handle(app *App, cmd *SlashCommand) error {
 		Result{
 			Database: "(mdq)",
 			Columns:  []string{"tag"},
+			Rows:     rows,
+		},
+	}
+
+	Print(results)
+
+	return nil
+}
+
+type SlashCommandHelp struct{}
+
+func (c SlashCommandHelp) Category() string { return "help" }
+func (c SlashCommandHelp) Name() string     { return "" }
+func (c SlashCommandHelp) Example() string  { return "/help" }
+
+func (c SlashCommandHelp) Help() string {
+	return "Show this help."
+}
+
+func (c SlashCommandHelp) Handle(app *App, cmd *SlashCommand) error {
+	rows := []map[string]interface{}{}
+
+	for category, inCategory := range app.slashCommandDefinition {
+		for name, def := range inCategory {
+			rows = append(rows, map[string]interface{}{
+				"category": category,
+				"name":     name,
+				"example":  def.Example(),
+				"help":     def.Help(),
+			})
+		}
+	}
+
+	results := []Result{
+		Result{
+			Database: "(mdq)",
+			Columns:  []string{"category", "name", "example", "help"},
 			Rows:     rows,
 		},
 	}

@@ -39,7 +39,8 @@ $ mdqi
 - [x] ignore empty query
 - [ ] slash command
     - [x] `/quit`
-    - [ ] `/tag (set|remove|show)`
+    - [x] `/tag (set|remove|show)`
+    - [x] `/help [category [name]]`
     - [ ] `/display (vertical|horizontal)`
 - [ ] load configuration file
 - [ ] CircleCI

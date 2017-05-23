@@ -92,6 +92,7 @@ func (app *App) initSlashCommands() {
 	app.RegisterSlashCommandDefinition(SlashCommandTagAdd{})
 	app.RegisterSlashCommandDefinition(SlashCommandTagRemove{})
 	app.RegisterSlashCommandDefinition(SlashCommandTagShow{})
+	app.RegisterSlashCommandDefinition(SlashCommandHelp{})
 }
 
 func (app *App) Run() {
