@@ -21,9 +21,11 @@ func Fprint(out io.Writer, results []Result) error {
 
 	printer := tablewriter.NewWriter(out)
 	printer.SetAlignment(tablewriter.ALIGN_LEFT)
+	printer.SetAutoFormatHeaders(false)
+	printer.SetAutoWrapText(false)
 
 	// set header
-	headers := []string{"DB"}
+	headers := []string{"db"}
 	for _, name := range results[0].Columns {
 		headers = append(headers, name)
 	}

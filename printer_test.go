@@ -46,7 +46,7 @@ func TestPrinter(t *testing.T) {
 
 	expect := `
 +-----+----+--------+
-| DB  | ID |  NAME  |
+| db  | id |  name  |
 +-----+----+--------+
 | db1 | 1  | foo    |
 | db1 | 2  | barbaz |

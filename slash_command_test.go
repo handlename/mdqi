@@ -229,7 +229,7 @@ func TestSlashCommandTagShow(t *testing.T) {
 
 	expect := `
 +-------+-----+
-|  DB   | TAG |
+|  db   | tag |
 +-------+-----+
 | (mdq) | db1 |
 | (mdq) | db2 |
@@ -260,7 +260,7 @@ func TestSlashCommandHelp(t *testing.T) {
 
 	expect := `
 +-------+----------+------+-----------+----------+
-|  DB   | CATEGORY | NAME |  EXAMPLE  |   HELP   |
+|  db   | category | name |  example  |   help   |
 +-------+----------+------+-----------+----------+
 | (mdq) | test     | foo  | /test foo | I'm foo. |
 | (mdq) | test     | bar  | /test bar | I'm bar. |
