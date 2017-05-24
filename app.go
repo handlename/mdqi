@@ -31,8 +31,8 @@ type App struct {
 	// app.slashCommandDefinition[category][name] = SlashCommandDefinition
 	slashCommandDefinition map[string]map[string]SlashCommandDefinition
 
-	// tags stores tag values for --tag option of mdq.
-	tags []string
+	// tag stores tag value for --tag option of mdq.
+	tag string
 }
 
 type Conf struct {
@@ -89,8 +89,8 @@ func createHistoryFile() (string, error) {
 
 func (app *App) initSlashCommands() {
 	app.RegisterSlashCommandDefinition(SlashCommandExit{})
-	app.RegisterSlashCommandDefinition(SlashCommandTagAdd{})
-	app.RegisterSlashCommandDefinition(SlashCommandTagRemove{})
+	app.RegisterSlashCommandDefinition(SlashCommandTagSet{})
+	app.RegisterSlashCommandDefinition(SlashCommandTagClear{})
 	app.RegisterSlashCommandDefinition(SlashCommandTagShow{})
 	app.RegisterSlashCommandDefinition(SlashCommandHelp{})
 }
@@ -132,7 +132,7 @@ LOOP:
 				continue
 			}
 
-			results, err := app.RunCmd(l)
+			results, err := app.RunCmd(l, app.buildCmdArgs()...)
 			if err != nil {
 				logger.Println(err.Error())
 			}
@@ -189,39 +189,14 @@ func (app *App) runSlashCommand(scmd *SlashCommand) {
 	return
 }
 
-func (app *App) GetTags() []string {
-	return app.tags
+func (app *App) GetTag() string {
+	return app.tag
 }
 
-func (app *App) AddTag(tag string) {
-	if 0 <= app.searchTag(tag) {
-		// already added.
-		return
-	}
-
-	app.tags = append(app.tags, tag)
+func (app *App) SetTag(tag string) {
+	app.tag = tag
 }
 
-func (app *App) RemoveTag(tag string) {
-	index := app.searchTag(tag)
-
-	if index < 0 {
-		// not exists.
-		return
-	}
-
-	app.tags = append(app.tags[:index], app.tags[index+1:]...)
-}
-
-func (app *App) searchTag(tag string) (index int) {
-	index = -1
-
-	for i, t := range app.tags {
-		if tag == t {
-			index = i
-			break
-		}
-	}
-
-	return index
+func (app *App) ClearTag() {
+	app.tag = ""
 }

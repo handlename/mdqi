@@ -183,29 +183,28 @@ func TestSlashCommandExit(t *testing.T) {
 func TestSlashCommandTagAdd(t *testing.T) {
 	app, _ := NewApp(Conf{})
 
-	def := SlashCommandTagAdd{}
+	def := SlashCommandTagSet{}
 	def.Handle(app, &SlashCommand{
 		Args: []string{"db1"},
 	})
 
-	if tag := app.GetTags()[0]; tag != "db1" {
+	if tag := app.GetTag(); tag != "db1" {
 		t.Fatal("unexpected tag:", tag)
 	}
 }
 
-func TestSlashCommandTagRemove(t *testing.T) {
+func TestSlashCommandTagClear(t *testing.T) {
 	app, _ := NewApp(Conf{})
 
-	app.AddTag("db1")
-	app.AddTag("db2")
+	app.SetTag("db1")
 
-	def := SlashCommandTagRemove{}
+	def := SlashCommandTagClear{}
 	def.Handle(app, &SlashCommand{
 		Args: []string{"db1"},
 	})
 
-	if tags := app.GetTags(); !sortEqual(tags, []string{"db2"}) {
-		t.Fatalf("failed to remove tag: %+v", tags)
+	if tag := app.GetTag(); tag != "" {
+		t.Fatal("failed to remove tag:", tag)
 	}
 }
 
@@ -219,8 +218,7 @@ func TestSlashCommandTagShow(t *testing.T) {
 
 	app, _ := NewApp(Conf{})
 
-	app.AddTag("db1")
-	app.AddTag("db2")
+	app.SetTag("db1")
 
 	def := SlashCommandTagShow{}
 	def.Handle(app, &SlashCommand{
@@ -232,7 +230,6 @@ func TestSlashCommandTagShow(t *testing.T) {
 |  db   | tag |
 +-------+-----+
 | (mdq) | db1 |
-| (mdq) | db2 |
 +-------+-----+
 `
 

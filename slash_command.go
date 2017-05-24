@@ -96,46 +96,46 @@ func (c SlashCommandExit) Handle(app *App, cmd *SlashCommand) error {
 	return nil
 }
 
-type SlashCommandTagAdd struct{}
+type SlashCommandTagSet struct{}
 
-func (c SlashCommandTagAdd) Category() string { return "tag" }
-func (c SlashCommandTagAdd) Name() string     { return "add" }
-func (c SlashCommandTagAdd) Example() string  { return "/tag add {tagname}" }
+func (c SlashCommandTagSet) Category() string { return "tag" }
+func (c SlashCommandTagSet) Name() string     { return "set" }
+func (c SlashCommandTagSet) Example() string  { return "/tag set {tagname}" }
 
-func (c SlashCommandTagAdd) Help() string {
-	return "Add tag to pass to mdq's --tag option."
+func (c SlashCommandTagSet) Help() string {
+	return "Set tag to pass to mdq's --tag option."
 }
 
-func (c SlashCommandTagAdd) Handle(app *App, cmd *SlashCommand) error {
+func (c SlashCommandTagSet) Handle(app *App, cmd *SlashCommand) error {
 	if len(cmd.Args) != 1 {
 		fmt.Println(c.Help())
 		return nil
 	}
 
-	app.AddTag(cmd.Args[0])
-	debug.Printf("tag added: %+v\n", app.GetTags())
+	app.SetTag(cmd.Args[0])
+	debug.Println("tag stored:", app.GetTag())
 
 	return nil
 }
 
-type SlashCommandTagRemove struct{}
+type SlashCommandTagClear struct{}
 
-func (c SlashCommandTagRemove) Category() string { return "tag" }
-func (c SlashCommandTagRemove) Name() string     { return "remove" }
-func (c SlashCommandTagRemove) Example() string  { return "/tag remove {tagname}" }
+func (c SlashCommandTagClear) Category() string { return "tag" }
+func (c SlashCommandTagClear) Name() string     { return "clear" }
+func (c SlashCommandTagClear) Example() string  { return "/tag clear {tagname}" }
 
-func (c SlashCommandTagRemove) Help() string {
-	return "Remove from tags to pass to mdq's --tag option."
+func (c SlashCommandTagClear) Help() string {
+	return "Clear tag to pass to mdq's --tag option."
 }
 
-func (c SlashCommandTagRemove) Handle(app *App, cmd *SlashCommand) error {
+func (c SlashCommandTagClear) Handle(app *App, cmd *SlashCommand) error {
 	if len(cmd.Args) != 1 {
 		fmt.Println(c.Help())
 		return nil
 	}
 
-	app.RemoveTag(cmd.Args[0])
-	debug.Printf("tag removed: %+v\n", app.GetTags())
+	app.ClearTag()
+	debug.Printf("tag cleard: %+v\n", app.GetTag())
 
 	return nil
 }
@@ -151,17 +151,13 @@ func (c SlashCommandTagShow) Help() string {
 }
 
 func (c SlashCommandTagShow) Handle(app *App, cmd *SlashCommand) error {
-	rows := []map[string]interface{}{}
-
-	for _, tag := range app.GetTags() {
-		rows = append(rows, map[string]interface{}{"tag": tag})
-	}
-
 	results := []Result{
 		Result{
 			Database: "(mdq)",
 			Columns:  []string{"tag"},
-			Rows:     rows,
+			Rows: []map[string]interface{}{
+				map[string]interface{}{"tag": app.GetTag()},
+			},
 		},
 	}
 

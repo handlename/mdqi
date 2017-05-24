@@ -4,23 +4,29 @@ import (
 	"testing"
 )
 
-func TestManageTags(t *testing.T) {
+func TestManageTag(t *testing.T) {
 	app, _ := NewApp(Conf{})
 
-	if tags := app.GetTags(); len(tags) != 0 {
-		t.Errorf("unexpected tags: %+v", tags)
+	if tag := app.GetTag(); tag != "" {
+		t.Error("unexpected tag:", tag)
 	}
 
-	app.AddTag("foo")
-	app.AddTag("bar")
+	app.SetTag("foo")
 
-	if tags := app.GetTags(); !sortEqual(tags, []string{"foo", "bar"}) {
-		t.Errorf("unexpected tags: %+v", tags)
+	if tag := app.GetTag(); tag != "foo" {
+		t.Error("unexpected tag:", tag)
 	}
 
-	app.RemoveTag("foo")
+	app.SetTag("bar")
 
-	if tags := app.GetTags(); !sortEqual(tags, []string{"bar"}) {
-		t.Errorf("unexpected tags: %+v", tags)
+	if tag := app.GetTag(); tag != "bar" {
+		t.Error("unexpected tag:", tag)
+	}
+
+	app.ClearTag()
+
+	if tag := app.GetTag(); tag != "" {
+		t.Error("unexpected tag:", tag)
+	}
 	}
 }
