@@ -1,0 +1,24 @@
+machine:
+  timezone: Asia/Tokyo
+  environment:
+    GOPATH: "${HOME}/go"
+    PATH: "${GOPATH}/bin:${PATH}"
+    PROJECT_ROOT: "${GOPATH}/src/github.com/handlename/mdqi"
+
+  checkout:
+    post:
+      - mkdir -p $PROJECT_ROOT
+      - rsync -azC --delete ./ $PROJECT_ROOT/
+
+  dependencies:
+    pre:
+      - mkdir $GOPATH/bin
+      - wget https://github.com/Masterminds/glide/releases/download/v0.12.3/glide-v0.12.3-linux-amd64.zip
+      - unzip glide-v0.12.3-linux-amd64.zip
+      - install linux-amd64/glide $GOPATH/bin/glide
+    override:
+      - cd $PROJECT_ROOT && glide install
+
+  test:
+    override:
+      - cd $PROJECT_ROOT && go test -v $(glide novendor)
