@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io"
 	"os/exec"
+	"strings"
 
 	"github.com/pkg/errors"
 )
@@ -25,6 +26,8 @@ func (app *App) RunCmd(query string, args ...string) (results []Result, err erro
 }
 
 func runCmd(path string, query string, args ...string) (out []byte, err error) {
+	debug.Printf("runs command: echo '%s' | %s %s", query, path, strings.Join(args, " "))
+
 	cmd := exec.Command(path, args...)
 
 	stdin, err := cmd.StdinPipe()

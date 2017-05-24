@@ -174,6 +174,17 @@ func (app *App) saveHistory(line *liner.State) {
 	}
 }
 
+func (app *App) buildCmdArgs() []string {
+	args := []string{}
+
+	// tag
+	if app.tag != "" {
+		args = append(args, "--tag="+app.tag)
+	}
+
+	return args
+}
+
 func (app *App) runSlashCommand(scmd *SlashCommand) {
 	sdef, err := app.FindSlashCommandDefinition(scmd.Category, scmd.Name)
 
