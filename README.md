@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/handlename/mdqi.svg?style=svg)](https://circleci.com/gh/handlename/mdqi)
+
 # mdqi
 
 `mdqi` is interactive interface for mdq.
