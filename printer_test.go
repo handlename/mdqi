@@ -40,7 +40,7 @@ func TestPrinter(t *testing.T) {
 	}
 
 	var out bytes.Buffer
-	if err := Fprint(&out, results); err != nil {
+	if err := Fprint(&out, defaultPrinter, results); err != nil {
 		t.Fatalf("error on print: %s", err.Error())
 	}
 
@@ -61,7 +61,7 @@ func TestPrinter(t *testing.T) {
 
 func TestPrinterWithEmptyResults(t *testing.T) {
 	// avoid panic
-	if err := Print([]Result{}); err != nil {
+	if err := Print(defaultPrinter, []Result{}); err != nil {
 		t.Error("unexpected error:", err)
 	}
 }

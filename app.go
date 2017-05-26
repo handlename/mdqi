@@ -137,7 +137,7 @@ LOOP:
 				logger.Println(err.Error())
 			}
 
-			Print(results)
+			Print(defaultPrinter, results)
 		case liner.ErrPromptAborted:
 			logger.Println("aborted")
 			break LOOP
