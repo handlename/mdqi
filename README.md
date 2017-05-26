@@ -46,6 +46,7 @@ $ mdqi
     - [x] `/help [category [name]]`
     - [ ] `/display (vertical|horizontal)`
 - [ ] load configuration file
+- [ ] -version option
 
 ## Licence
 
