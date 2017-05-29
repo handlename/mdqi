@@ -47,6 +47,7 @@ $ mdqi
     - [ ] `/display (vertical|horizontal)`
 - [ ] load configuration file
 - [ ] -version option
+- [ ] Ctrl-Z
 
 ## Licence
 
