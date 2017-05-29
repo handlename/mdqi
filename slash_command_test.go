@@ -233,7 +233,7 @@ func TestSlashCommandTagShow(t *testing.T) {
 +-------+-----+
 `
 
-	if s := out.String(); !compareAfterTrim(s, expect, " \n") {
+	if s := out.String(); !compareAfterTrim(s, expect) {
 		t.Fatalf("unexpected output:\n%s", s)
 	}
 }
@@ -264,7 +264,7 @@ func TestSlashCommandHelp(t *testing.T) {
 +-------+----------+------+-----------+----------+
 `
 
-	if s := out.String(); !compareAfterTrim(s, expect, " \n") {
+	if s := out.String(); !compareAfterTrim(s, expect) {
 		t.Fatalf("unexpected output:\n%s", s)
 	}
 }

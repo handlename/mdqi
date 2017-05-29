@@ -52,6 +52,31 @@ func (p HorizontalPrinter) Print(out io.Writer, results []Result) error {
 type VerticalPrinter struct{}
 
 func (p VerticalPrinter) Print(out io.Writer, results []Result) error {
+	num := 0
+
+	for _, result := range results {
+		for _, row := range result.Rows {
+			num += 1
+
+			fmt.Fprintf(out, "*************************** %d. row ***************************\n", num)
+
+			table := tablewriter.NewWriter(out)
+			table.SetAlignment(tablewriter.ALIGN_LEFT)
+			table.SetAutoFormatHeaders(false)
+			table.SetAutoWrapText(false)
+			table.SetColumnSeparator(":")
+			table.SetBorders(tablewriter.Border{Left: false, Top: false, Right: false, Bottom: false})
+
+			table.Append([]string{"db", result.Database})
+
+			for _, name := range result.Columns {
+				table.Append([]string{name, fmt.Sprint(row[name])})
+			}
+
+			table.Render()
+		}
+	}
+
 	return nil
 }
 
