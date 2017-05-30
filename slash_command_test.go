@@ -247,7 +247,7 @@ func TestSlashCommandHelp(t *testing.T) {
 	}()
 
 	app, _ := NewApp(Conf{})
-	app.slashCommandDefinition = map[string]map[string]SlashCommandDefinition{}
+	app.clearSlashCommands()
 
 	app.RegisterSlashCommandDefinition(TestDefFoo{})
 	app.RegisterSlashCommandDefinition(TestDefBar{})

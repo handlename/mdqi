@@ -100,6 +100,12 @@ func (app *App) initSlashCommands() {
 	app.RegisterSlashCommandDefinition(SlashCommandHelp{})
 }
 
+// clearSlashCommands clears all of registered slash commands.
+// This function is mainly for test.
+func (app *App) clearSlashCommands() {
+	app.slashCommandDefinition = map[string]map[string]SlashCommandDefinition{}
+}
+
 func (app *App) Run() {
 	app.runLiner()
 }
