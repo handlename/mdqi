@@ -3,6 +3,7 @@ package mdqi
 import (
 	"encoding/json"
 	"io"
+	"io/ioutil"
 	"os/exec"
 	"strings"
 
@@ -35,15 +36,31 @@ func runCmd(path string, query string, args ...string) (out []byte, err error) {
 		return nil, errors.Wrapf(err, "failed to open stdin pipe for command %s", path)
 	}
 
+	stdout, err := cmd.StdoutPipe()
+	if err != nil {
+		return nil, errors.Wrapf(err, "failed to get stdout pipe for command %s", path)
+	}
+
+	stderr, err := cmd.StderrPipe()
+	if err != nil {
+		return nil, errors.Wrapf(err, "failed to get stderr pipe for command %s", path)
+	}
+
 	go func() {
 		defer stdin.Close()
 		io.WriteString(stdin, query)
 	}()
 
-	// TODO: error message handling
-	out, err = cmd.Output()
-	if err != nil {
+	if err = cmd.Start(); err != nil {
 		return nil, errors.Wrapf(err, "failed to run command %s", path)
+	}
+
+	if o, _ := ioutil.ReadAll(stderr); o != nil {
+		logger.Println(string(o))
+	}
+
+	if out, err = ioutil.ReadAll(stdout); err != nil {
+		return nil, errors.Wrap(err, "failed to read stdout")
 	}
 
 	return out, nil
