@@ -55,7 +55,7 @@ func runCmd(path string, query string, args ...string) (out []byte, err error) {
 		return nil, errors.Wrapf(err, "failed to run command %s", path)
 	}
 
-	if o, _ := ioutil.ReadAll(stderr); o != nil {
+	if o, _ := ioutil.ReadAll(stderr); 0 < len(o) {
 		logger.Println(string(o))
 	}
 
