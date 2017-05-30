@@ -268,3 +268,45 @@ func TestSlashCommandHelp(t *testing.T) {
 		t.Fatalf("unexpected output:\n%s", s)
 	}
 }
+
+func TestSlashCommandDisplay(t *testing.T) {
+	app, _ := NewApp(Conf{})
+
+	def := SlashCommandDisplay{}
+
+	{
+		// invalid format
+
+		if err := def.Handle(app, &SlashCommand{Args: []string{"foo"}}); err != ErrSlashCommandInvalidArgs {
+			t.Error("must be error")
+		}
+	}
+
+	{
+		// format: vertical
+
+		if err := def.Handle(app, &SlashCommand{Args: []string{"vertical"}}); err != nil {
+			t.Errorf("unexpected error: %s", err)
+		}
+
+		switch ty := app.printer.(type) {
+		case VerticalPrinter:
+		default:
+			t.Errorf("unexpected printer type: %s", ty)
+		}
+	}
+
+	{
+		// format: horizontal
+
+		if err := def.Handle(app, &SlashCommand{Args: []string{"horizontal"}}); err != nil {
+			t.Errorf("unexpected error: %s", err)
+		}
+
+		switch ty := app.printer.(type) {
+		case HorizontalPrinter:
+		default:
+			t.Errorf("unexpected printer type: %s", ty)
+		}
+	}
+}

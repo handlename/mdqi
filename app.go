@@ -13,8 +13,9 @@ import (
 )
 
 var (
-	ErrSlashCommandNotFound = errors.New("unknown SlashCommand")
-	ErrNotASlashCommand     = errors.New("there are no SlashCommand")
+	ErrSlashCommandNotFound    = errors.New("unknown SlashCommand")
+	ErrNotASlashCommand        = errors.New("there are no SlashCommand")
+	ErrSlashCommandInvalidArgs = errors.New("invalid args")
 )
 
 type App struct {
@@ -92,6 +93,7 @@ func createHistoryFile() (string, error) {
 
 func (app *App) initSlashCommands() {
 	app.RegisterSlashCommandDefinition(SlashCommandExit{})
+	app.RegisterSlashCommandDefinition(SlashCommandDisplay{})
 	app.RegisterSlashCommandDefinition(SlashCommandTagSet{})
 	app.RegisterSlashCommandDefinition(SlashCommandTagClear{})
 	app.RegisterSlashCommandDefinition(SlashCommandTagShow{})

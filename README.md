@@ -44,7 +44,7 @@ $ mdqi
     - [x] `/quit`
     - [x] `/tag (set|remove|show)`
     - [x] `/help [category [name]]`
-    - [ ] `/display (vertical|horizontal)`
+    - [x] `/display (vertical|horizontal)`
 - [ ] load configuration file
 - [ ] -version option
 - [ ] Ctrl-Z

@@ -202,3 +202,32 @@ func (c SlashCommandHelp) Handle(app *App, cmd *SlashCommand) error {
 
 	return nil
 }
+
+type SlashCommandDisplay struct{}
+
+func (c SlashCommandDisplay) Category() string { return "display" }
+func (c SlashCommandDisplay) Name() string     { return "set" }
+func (c SlashCommandDisplay) Example() string  { return "/display set (horizontal|vertical)" }
+
+func (c SlashCommandDisplay) Help() string {
+	return "Set display format."
+}
+
+func (c SlashCommandDisplay) Handle(app *App, cmd *SlashCommand) error {
+	if len(cmd.Args) != 1 {
+		return ErrSlashCommandInvalidArgs
+	}
+
+	switch cmd.Args[0] {
+	case "horizontal":
+		app.printer = HorizontalPrinter{}
+	case "vertical":
+		app.printer = VerticalPrinter{}
+	default:
+		return ErrSlashCommandInvalidArgs
+	}
+
+	debug.Printf("printer has been changed to %s", cmd.Args[0])
+
+	return nil
+}
