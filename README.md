@@ -40,7 +40,7 @@ $ mdqi
 - [x] logger
 - [x] ignore empty query
 - [x] CircleCI
-- [ ] slash command
+- [x] slash command
     - [x] `/quit`
     - [x] `/tag (set|remove|show)`
     - [x] `/help [category [name]]`
