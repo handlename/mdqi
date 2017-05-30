@@ -8,9 +8,6 @@ import (
 )
 
 var defaultOutput io.Writer
-var defaultPrinter Printer = func() Printer {
-	return HorizontalPrinter{}
-}()
 
 type Printer interface {
 	Print(out io.Writer, results []Result) error

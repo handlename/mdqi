@@ -33,6 +33,8 @@ type App struct {
 
 	// tag stores tag value for --tag option of mdq.
 	tag string
+
+	printer Printer
 }
 
 type Conf struct {
@@ -63,6 +65,7 @@ func NewApp(conf Conf) (*App, error) {
 		cmdPath:                "mdq",
 		historyPath:            historyPath,
 		slashCommandDefinition: map[string]map[string]SlashCommandDefinition{},
+		printer:                HorizontalPrinter{},
 	}
 
 	app.initSlashCommands()
@@ -137,7 +140,7 @@ LOOP:
 				logger.Println(err.Error())
 			}
 
-			Print(defaultPrinter, results)
+			Print(app.printer, results)
 		case liner.ErrPromptAborted:
 			logger.Println("aborted")
 			break LOOP

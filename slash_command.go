@@ -161,7 +161,7 @@ func (c SlashCommandTagShow) Handle(app *App, cmd *SlashCommand) error {
 		},
 	}
 
-	Print(defaultPrinter, results)
+	Print(app.printer, results)
 
 	return nil
 }
@@ -198,7 +198,7 @@ func (c SlashCommandHelp) Handle(app *App, cmd *SlashCommand) error {
 		},
 	}
 
-	Print(defaultPrinter, results)
+	Print(app.printer, results)
 
 	return nil
 }
