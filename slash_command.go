@@ -3,6 +3,7 @@ package mdqi
 import (
 	"fmt"
 	"regexp"
+	"sort"
 )
 
 type SlashCommand struct {
@@ -179,8 +180,18 @@ func (c SlashCommandHelp) Help() string {
 func (c SlashCommandHelp) Handle(app *App, cmd *SlashCommand) error {
 	rows := []map[string]interface{}{}
 
-	for category, inCategory := range app.slashCommandDefinition {
-		for name, def := range inCategory {
+	categories := app.slashCommandCategories()
+	sort.Strings(categories)
+
+	for _, category := range categories {
+		inCategory := app.slashCommandDefinition[category]
+
+		names := app.slashCommandNames(category)
+		sort.Strings(names)
+
+		for _, name := range names {
+			def := inCategory[name]
+
 			rows = append(rows, map[string]interface{}{
 				"category": category,
 				"name":     name,

@@ -106,6 +106,28 @@ func (app *App) clearSlashCommands() {
 	app.slashCommandDefinition = map[string]map[string]SlashCommandDefinition{}
 }
 
+func (app *App) slashCommandCategories() []string {
+	defs := app.slashCommandDefinition
+	keys := make([]string, 0, len(defs))
+
+	for key := range defs {
+		keys = append(keys, key)
+	}
+
+	return keys
+}
+
+func (app *App) slashCommandNames(category string) []string {
+	defs := app.slashCommandDefinition[category]
+	keys := make([]string, 0, len(defs))
+
+	for key := range defs {
+		keys = append(keys, key)
+	}
+
+	return keys
+}
+
 func (app *App) Run() {
 	app.runLiner()
 }
