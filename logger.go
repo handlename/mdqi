@@ -8,7 +8,7 @@ import (
 )
 
 var logger = func() *log.Logger {
-	return log.New(os.Stderr, "", log.Ldate|log.Ltime|log.Lshortfile)
+	return log.New(os.Stderr, "", log.Ldate|log.Ltime)
 }()
 
 var debug = func() *log.Logger {
