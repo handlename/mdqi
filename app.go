@@ -69,8 +69,6 @@ func NewApp(conf Conf) (*App, error) {
 		printer:                HorizontalPrinter{},
 	}
 
-	app.initSlashCommands()
-
 	return app, nil
 }
 
@@ -89,21 +87,6 @@ func createHistoryFile() (string, error) {
 	}
 
 	return path, nil
-}
-
-func (app *App) initSlashCommands() {
-	app.RegisterSlashCommandDefinition(SlashCommandExit{})
-	app.RegisterSlashCommandDefinition(SlashCommandDisplay{})
-	app.RegisterSlashCommandDefinition(SlashCommandTagSet{})
-	app.RegisterSlashCommandDefinition(SlashCommandTagClear{})
-	app.RegisterSlashCommandDefinition(SlashCommandTagShow{})
-	app.RegisterSlashCommandDefinition(SlashCommandHelp{})
-}
-
-// clearSlashCommands clears all of registered slash commands.
-// This function is mainly for test.
-func (app *App) clearSlashCommands() {
-	app.slashCommandDefinition = map[string]map[string]SlashCommandDefinition{}
 }
 
 func (app *App) slashCommandCategories() []string {
