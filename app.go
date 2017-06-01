@@ -38,9 +38,6 @@ type App struct {
 	printer Printer
 }
 
-type Conf struct {
-}
-
 type Result struct {
 	Database string
 	Columns  []string

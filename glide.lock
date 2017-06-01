@@ -1,6 +1,8 @@
-hash: ac2bd937d5c08f2b4c51acf0248934854cfb4d7e83517ca4d6cc68f9bded067f
-updated: 2017-05-11T08:35:47.885434612+09:00
+hash: 755b1bea60057d6a163c4347fb4956e1d54bdf8b75b359d162257ae54d776d22
+updated: 2017-06-01T08:21:54.419523175+09:00
 imports:
+- name: github.com/go-yaml/yaml
+  version: cd8b52f8269e0feb286dfeef29f8fe4d5b397e0b
 - name: github.com/mattn/go-runewidth
   version: 97311d9f7767e3d6f422ea06661bc2c7a19e8a5d
 - name: github.com/olekukonko/tablewriter

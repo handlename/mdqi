@@ -1,0 +1,8 @@
+mdq:
+  bin: ~/bin/mdq
+  config: ~/.config/mdq/config.yaml
+
+mdqi:
+  history: ~/.mdqi_history
+  default_tag: db1
+  default_display: horizontal
