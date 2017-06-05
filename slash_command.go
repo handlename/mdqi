@@ -229,12 +229,8 @@ func (c SlashCommandDisplay) Handle(app *App, cmd *SlashCommand) error {
 		return ErrSlashCommandInvalidArgs
 	}
 
-	switch cmd.Args[0] {
-	case "horizontal":
-		app.printer = HorizontalPrinter{}
-	case "vertical":
-		app.printer = VerticalPrinter{}
-	default:
+	if err := app.SetPrinterByName(cmd.Args[0]); err != nil {
+		debug.Printf("error on SetPrinterByName: %s", err)
 		return ErrSlashCommandInvalidArgs
 	}
 

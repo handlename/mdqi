@@ -16,6 +16,7 @@ var (
 	ErrSlashCommandNotFound    = errors.New("unknown SlashCommand")
 	ErrNotASlashCommand        = errors.New("there are no SlashCommand")
 	ErrSlashCommandInvalidArgs = errors.New("invalid args")
+	ErrUnknownPrinterName      = errors.New("unknown printer name")
 )
 
 type App struct {
@@ -64,6 +65,19 @@ func NewApp(conf Conf) (*App, error) {
 		historyPath:            historyPath,
 		slashCommandDefinition: map[string]map[string]SlashCommandDefinition{},
 		printer:                HorizontalPrinter{},
+	}
+
+	if tag := conf.Mdqi.DefaultTag; tag != "" {
+		app.SetTag(tag)
+		debug.Println("conf (tag):", tag)
+	}
+
+	if display := conf.Mdqi.DefaultDisplay; display != "" {
+		if err = app.SetPrinterByName(display); err != nil {
+			return nil, errors.Wrap(err, "failed to set default printer")
+		}
+
+		debug.Println("conf (display):", display)
 	}
 
 	return app, nil
@@ -211,6 +225,20 @@ func (app *App) runSlashCommand(scmd *SlashCommand) {
 	}
 
 	return
+}
+
+func (app *App) SetPrinterByName(name string) error {
+
+	switch name {
+	case "horizontal":
+		app.printer = HorizontalPrinter{}
+	case "vertical":
+		app.printer = VerticalPrinter{}
+	default:
+		return ErrUnknownPrinterName
+	}
+
+	return nil
 }
 
 func (app *App) GetTag() string {

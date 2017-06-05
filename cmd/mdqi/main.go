@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
 
@@ -8,7 +9,22 @@ import (
 )
 
 func main() {
-	app, err := mdqi.NewApp(mdqi.Conf{})
+	var (
+		confPath string
+	)
+
+	flag.StringVar(&confPath, "conf", "", "path to configuration file.")
+	flag.Parse()
+
+	conf := mdqi.Conf{}
+	if confPath != "" {
+		var err error
+		if conf, err = mdqi.ConfFromFile(confPath); err != nil {
+			fmt.Fprintln(os.Stderr, err.Error())
+		}
+	}
+
+	app, err := mdqi.NewApp(conf)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
 		os.Exit(1)
