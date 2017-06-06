@@ -25,6 +25,7 @@ type ConfMdq struct {
 
 type ConfMdqi struct {
 	// History is the path to history file.
+	// Default value is "$HOME/.mdqi_history".
 	History string `yaml:"history"`
 
 	// DefaultTag is default value for mdq's --tag option.

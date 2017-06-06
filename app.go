@@ -51,12 +51,22 @@ func init() {
 
 func NewApp(conf Conf) (*App, error) {
 	// TODO: Check if mdq command exists by exec.LookPath.
-	// TODO: Make historyPath configuarable.
 
-	historyPath, err := createHistoryFile()
+	// create history file
+	historyPath := conf.Mdqi.History
+	if historyPath == "" {
+		var err error
+		if historyPath, err = defaultHistoryPath(); err != nil {
+			return nil, errors.Wrap(err, "failed to make default history path")
+		}
+	}
+
+	err := createHistoryFile(historyPath)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to create history file")
 	}
+
+	debug.Println("conf (history):", historyPath)
 
 	app := &App{
 		Alive: true,
@@ -67,11 +77,13 @@ func NewApp(conf Conf) (*App, error) {
 		printer:                HorizontalPrinter{},
 	}
 
+	// set default tag
 	if tag := conf.Mdqi.DefaultTag; tag != "" {
 		app.SetTag(tag)
 		debug.Println("conf (tag):", tag)
 	}
 
+	// set default display
 	if display := conf.Mdqi.DefaultDisplay; display != "" {
 		if err = app.SetPrinterByName(display); err != nil {
 			return nil, errors.Wrap(err, "failed to set default printer")
@@ -83,21 +95,23 @@ func NewApp(conf Conf) (*App, error) {
 	return app, nil
 }
 
-func createHistoryFile() (string, error) {
+func createHistoryFile(path string) error {
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		if _, err := os.Create(path); err != nil {
+			return errors.Wrap(err, "failed to create history file")
+		}
+	}
+
+	return nil
+}
+
+func defaultHistoryPath() (string, error) {
 	usr, err := user.Current()
 	if err != nil {
 		return "", errors.Wrap(err, "failed to get current user")
 	}
 
-	path := filepath.Join(usr.HomeDir, ".mdqi_history")
-
-	if _, err := os.Stat(path); os.IsNotExist(err) {
-		if _, err := os.Create(path); err != nil {
-			return "", errors.Wrap(err, "failed to create history file")
-		}
-	}
-
-	return path, nil
+	return filepath.Join(usr.HomeDir, ".mdqi_history"), err
 }
 
 func (app *App) slashCommandCategories() []string {
