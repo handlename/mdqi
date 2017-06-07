@@ -12,6 +12,10 @@ import (
 	"github.com/pkg/errors"
 )
 
+const (
+	defaultHistoryFilename = ".mdqi_history"
+)
+
 var (
 	ErrSlashCommandNotFound    = errors.New("unknown SlashCommand")
 	ErrNotASlashCommand        = errors.New("there are no SlashCommand")
@@ -54,19 +58,14 @@ func NewApp(conf Conf) (*App, error) {
 
 	// create history file
 	historyPath := conf.Mdqi.History
-	if historyPath == "" {
+	if path := conf.Mdqi.History; path != "" {
 		var err error
-		if historyPath, err = defaultHistoryPath(); err != nil {
-			return nil, errors.Wrap(err, "failed to make default history path")
+		if err = createHistoryFile(path); err != nil {
+			return nil, errors.Wrapf(err, "failed to create history file at %s", path)
 		}
+		historyPath = path
+		debug.Println("conf.Mdqi.History =", historyPath)
 	}
-
-	err := createHistoryFile(historyPath)
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to create history file")
-	}
-
-	debug.Println("conf (history):", historyPath)
 
 	app := &App{
 		Alive: true,
@@ -111,7 +110,7 @@ func defaultHistoryPath() (string, error) {
 		return "", errors.Wrap(err, "failed to get current user")
 	}
 
-	return filepath.Join(usr.HomeDir, ".mdqi_history"), err
+	return filepath.Join(usr.HomeDir, defaultHistoryFilename), err
 }
 
 func (app *App) slashCommandCategories() []string {
