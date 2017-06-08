@@ -8,11 +8,14 @@ import (
 	"path/filepath"
 	"strings"
 
+	"os/exec"
+
 	"github.com/peterh/liner"
 	"github.com/pkg/errors"
 )
 
 const (
+	defaultMdqPath         = "mdq"
 	defaultHistoryFilename = ".mdqi_history"
 )
 
@@ -54,7 +57,15 @@ func init() {
 }
 
 func NewApp(conf Conf) (*App, error) {
-	// TODO: Check if mdq command exists by exec.LookPath.
+	// validate mdq path
+	mdqPath := defaultMdqPath
+	if path := conf.Mdq.Bin; path != "" {
+		if err := lookMdqPath(conf.Mdq.Bin); err != nil {
+			return nil, errors.Wrapf(err, "mdq command not found at %s", path)
+		}
+		mdqPath = path
+		debug.Println("conf.Mdq.Bin =", path)
+	}
 
 	// create history file
 	historyPath := conf.Mdqi.History
@@ -70,7 +81,7 @@ func NewApp(conf Conf) (*App, error) {
 	app := &App{
 		Alive: true,
 
-		cmdPath:                "mdq",
+		cmdPath:                mdqPath,
 		historyPath:            historyPath,
 		slashCommandDefinition: map[string]map[string]SlashCommandDefinition{},
 		printer:                HorizontalPrinter{},
@@ -111,6 +122,12 @@ func defaultHistoryPath() (string, error) {
 	}
 
 	return filepath.Join(usr.HomeDir, defaultHistoryFilename), err
+}
+
+func lookMdqPath(path string) error {
+	_, err := exec.LookPath(path)
+
+	return err
 }
 
 func (app *App) slashCommandCategories() []string {
