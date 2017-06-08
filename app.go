@@ -33,6 +33,9 @@ type App struct {
 	// mdqPath is path to mdq command.
 	mdqPath string
 
+	// mdqConfigPath is path to configuration file for mdq command.
+	mdqConfigPath string
+
 	// historyPath is path to command history file for liner.
 	historyPath string
 
@@ -67,6 +70,11 @@ func NewApp(conf Conf) (*App, error) {
 		debug.Println("conf.Mdq.Bin =", path)
 	}
 
+	// mdq config path
+	if path := conf.Mdq.Config; path != "" {
+		debug.Println("conf.Mdq.Config =", path)
+	}
+
 	// create history file
 	historyPath := conf.Mdqi.History
 	if path := conf.Mdqi.History; path != "" {
@@ -82,6 +90,7 @@ func NewApp(conf Conf) (*App, error) {
 		Alive: true,
 
 		mdqPath:                mdqPath,
+		mdqConfigPath:          conf.Mdq.Config,
 		historyPath:            historyPath,
 		slashCommandDefinition: map[string]map[string]SlashCommandDefinition{},
 		printer:                HorizontalPrinter{},
@@ -234,9 +243,14 @@ func (app *App) saveHistory(line *liner.State) {
 func (app *App) buildCmdArgs() []string {
 	args := []string{}
 
+	// config
+	if path := app.mdqConfigPath; path != "" {
+		args = append(args, "--config="+path)
+	}
+
 	// tag
-	if app.tag != "" {
-		args = append(args, "--tag="+app.tag)
+	if tag := app.tag; tag != "" {
+		args = append(args, "--tag="+tag)
 	}
 
 	return args
