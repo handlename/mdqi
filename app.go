@@ -30,8 +30,8 @@ type App struct {
 	// Alive turns into false, mdqi will exit.
 	Alive bool
 
-	// cmdPath is path to mdq command.
-	cmdPath string
+	// mdqPath is path to mdq command.
+	mdqPath string
 
 	// historyPath is path to command history file for liner.
 	historyPath string
@@ -81,7 +81,7 @@ func NewApp(conf Conf) (*App, error) {
 	app := &App{
 		Alive: true,
 
-		cmdPath:                mdqPath,
+		mdqPath:                mdqPath,
 		historyPath:            historyPath,
 		slashCommandDefinition: map[string]map[string]SlashCommandDefinition{},
 		printer:                HorizontalPrinter{},
