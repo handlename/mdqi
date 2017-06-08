@@ -79,16 +79,16 @@ func NewApp(conf Conf) (*App, error) {
 	// set default tag
 	if tag := conf.Mdqi.DefaultTag; tag != "" {
 		app.SetTag(tag)
-		debug.Println("conf (tag):", tag)
+		debug.Println("conf.Mdqi.DefaultTag =", tag)
 	}
 
 	// set default display
 	if display := conf.Mdqi.DefaultDisplay; display != "" {
-		if err = app.SetPrinterByName(display); err != nil {
+		if err := app.SetPrinterByName(display); err != nil {
 			return nil, errors.Wrap(err, "failed to set default printer")
 		}
 
-		debug.Println("conf (display):", display)
+		debug.Println("conf.Mdqi.DefaultDisplay =", display)
 	}
 
 	return app, nil
