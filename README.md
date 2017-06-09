@@ -46,9 +46,9 @@ $ mdqi
     - [x] `/help [category [name]]`
     - [x] `/display (vertical|horizontal)`
 - [x] load configuration file
-- [ ] -version option
-- [ ] -help option
+- [x] -version option
 - [ ] Ctrl-Z
+- [ ] multi line input
 
 ## Licence
 

@@ -18,3 +18,4 @@ vendor/
 
 # Commands
 cmd/mdqi/mdqi
+dist/

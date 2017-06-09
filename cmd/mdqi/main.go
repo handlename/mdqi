@@ -8,13 +8,22 @@ import (
 	"github.com/handlename/mdqi"
 )
 
+var version string
+
 func main() {
 	var (
-		confPath string
+		confPath    string
+		showVersion bool
 	)
 
 	flag.StringVar(&confPath, "conf", "", "path to configuration file.")
+	flag.BoolVar(&showVersion, "version", false, "display version.")
 	flag.Parse()
+
+	if showVersion {
+		fmt.Println("mdqi", version)
+		os.Exit(0)
+	}
 
 	conf := mdqi.Conf{}
 	if confPath != "" {

@@ -19,6 +19,8 @@ const (
 	defaultHistoryFilename = ".mdqi_history"
 )
 
+var Version string
+
 var (
 	ErrSlashCommandNotFound    = errors.New("unknown SlashCommand")
 	ErrNotASlashCommand        = errors.New("there are no SlashCommand")
