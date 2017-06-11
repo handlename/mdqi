@@ -179,7 +179,7 @@ func (app *App) runLiner() {
 	rgxFinishLine := regexp.MustCompile(";$")
 	lineFinished := true
 
-	var l string
+	var input string
 	var err error
 
 LOOP:
@@ -190,36 +190,36 @@ LOOP:
 		}
 
 		if lineFinished {
-			l, err = line.Prompt("mdq> ")
+			input, err = line.Prompt("mdq> ")
 		} else {
-			var ll string
-			ll, err = line.Prompt("   | ")
-			l = strings.Join([]string{l, ll}, " ")
+			var l string
+			l, err = line.Prompt("   | ")
+			input = strings.Join([]string{input, l}, " ")
 		}
 
 		switch err {
 		case nil:
-			l = strings.Trim(l, " \n")
+			input = strings.Trim(input, " \n")
 
-			if lineFinished = rgxFinishLine.MatchString(l); lineFinished {
+			if lineFinished = rgxFinishLine.MatchString(input); lineFinished {
 			} else {
 				// If line is not finished, read next line as continue.
 				continue
 			}
 
-			if l == "" {
+			if input == "" {
 				continue
 			}
 
-			line.AppendHistory(l)
+			line.AppendHistory(input)
 
-			scmd, _ := ParseSlashCommand(l)
+			scmd, _ := ParseSlashCommand(input)
 			if scmd != nil {
 				app.runSlashCommand(scmd)
 				continue
 			}
 
-			results, err := app.RunCmd(l, app.buildCmdArgs()...)
+			results, err := app.RunCmd(input, app.buildCmdArgs()...)
 			if err != nil {
 				logger.Println(err.Error())
 			}
