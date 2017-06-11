@@ -238,3 +238,29 @@ func (c SlashCommandDisplay) Handle(app *App, cmd *SlashCommand) error {
 
 	return nil
 }
+
+type SlashCommandToggleDisplay struct{}
+
+func (c SlashCommandToggleDisplay) Category() string { return "v" }
+func (c SlashCommandToggleDisplay) Name() string     { return "" }
+func (c SlashCommandToggleDisplay) Example() string  { return "/v" }
+
+func (c SlashCommandToggleDisplay) Help() string {
+	return "Toggle display type between horizontal and vertical."
+}
+
+func (c SlashCommandToggleDisplay) Handle(app *App, cmd *SlashCommand) error {
+	name := "horizontal"
+
+	switch app.printer.(type) {
+	case HorizontalPrinter:
+		name = "vertical"
+	case VerticalPrinter:
+		name = "horizontal"
+	}
+
+	app.SetPrinterByName(name)
+	debug.Println("printer has been changed to", name)
+
+	return nil
+}

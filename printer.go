@@ -10,10 +10,13 @@ import (
 var defaultOutput io.Writer
 
 type Printer interface {
+	Name() string
 	Print(out io.Writer, results []Result) error
 }
 
 type HorizontalPrinter struct{}
+
+func (p HorizontalPrinter) Name() string { return "horizontal" }
 
 func (p HorizontalPrinter) Print(out io.Writer, results []Result) error {
 	table := tablewriter.NewWriter(out)
@@ -47,6 +50,8 @@ func (p HorizontalPrinter) Print(out io.Writer, results []Result) error {
 }
 
 type VerticalPrinter struct{}
+
+func (p VerticalPrinter) Name() string { return "vertical" }
 
 func (p VerticalPrinter) Print(out io.Writer, results []Result) error {
 	num := 0

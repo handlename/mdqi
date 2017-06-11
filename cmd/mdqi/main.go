@@ -45,6 +45,7 @@ func main() {
 	app.RegisterSlashCommandDefinition(mdqi.SlashCommandTagClear{})
 	app.RegisterSlashCommandDefinition(mdqi.SlashCommandTagSet{})
 	app.RegisterSlashCommandDefinition(mdqi.SlashCommandTagShow{})
+	app.RegisterSlashCommandDefinition(mdqi.SlashCommandToggleDisplay{})
 
 	app.Run()
 }

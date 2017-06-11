@@ -308,3 +308,26 @@ func TestSlashCommandDisplay(t *testing.T) {
 		}
 	}
 }
+
+func TestSlashCommandToggleDisplay(t *testing.T) {
+	app, _ := NewApp(Conf{})
+	app.SetPrinterByName("horizontal")
+
+	def := SlashCommandToggleDisplay{}
+
+	if err := def.Handle(app, &SlashCommand{}); err != nil {
+		t.Errorf("unexpected error: %s", err)
+	}
+
+	if n := app.printer.Name(); n != "vertical" {
+		t.Error("unexpected printer:", n)
+	}
+
+	if err := def.Handle(app, &SlashCommand{}); err != nil {
+		t.Errorf("unexpected error: %s", err)
+	}
+
+	if n := app.printer.Name(); n != "horizontal" {
+		t.Error("unexpected printer:", n)
+	}
+}

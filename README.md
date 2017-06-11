@@ -45,7 +45,7 @@ $ mdqi
     - [x] `/tag (set|remove|show)`
     - [x] `/help [category [name]]`
     - [x] `/display (vertical|horizontal)`
-    - [ ] `/v` alias for toggle display
+    - [x] `/v` alias for toggle display
 - [x] load configuration file
 - [x] -version option
 - [x] multi line input
