@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/user"
 	"path/filepath"
+	"regexp"
 	"strings"
 
 	"os/exec"
@@ -175,6 +176,12 @@ func (app *App) runLiner() {
 
 	app.initHistory(line)
 
+	rgxFinishLine := regexp.MustCompile(";$")
+	lineFinished := true
+
+	var l string
+	var err error
+
 LOOP:
 	for {
 		if !app.Alive {
@@ -182,11 +189,23 @@ LOOP:
 			break LOOP
 		}
 
-		l, err := line.Prompt("mdq> ")
+		if lineFinished {
+			l, err = line.Prompt("mdq> ")
+		} else {
+			var ll string
+			ll, err = line.Prompt("   | ")
+			l = strings.Join([]string{l, ll}, " ")
+		}
 
 		switch err {
 		case nil:
 			l = strings.Trim(l, " \n")
+
+			if lineFinished = rgxFinishLine.MatchString(l); lineFinished {
+			} else {
+				// If line is not finished, read next line as continue.
+				continue
+			}
 
 			if l == "" {
 				continue
