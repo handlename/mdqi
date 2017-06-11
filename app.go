@@ -80,13 +80,15 @@ func NewApp(conf Conf) (*App, error) {
 
 	// create history file
 	historyPath := conf.Mdqi.History
-	if path := conf.Mdqi.History; path != "" {
+	if historyPath == "" {
 		var err error
-		if err = createHistoryFile(path); err != nil {
-			return nil, errors.Wrapf(err, "failed to create history file at %s", path)
+		if historyPath, err = defaultHistoryPath(); err != nil {
+			return nil, errors.Wrap(err, "failed to create history file at default path")
 		}
-		historyPath = path
 		debug.Println("conf.Mdqi.History =", historyPath)
+	}
+	if err := createHistoryFile(historyPath); err != nil {
+		return nil, errors.Wrapf(err, "failed to create history file at %s", historyPath)
 	}
 
 	app := &App{
@@ -120,7 +122,7 @@ func NewApp(conf Conf) (*App, error) {
 func createHistoryFile(path string) error {
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		if _, err := os.Create(path); err != nil {
-			return errors.Wrap(err, "failed to create history file")
+			return errors.Wrapf(err, "failed to create history file at %s", path)
 		}
 	}
 
@@ -245,7 +247,7 @@ func (app *App) initHistory(line *liner.State) {
 		line.ReadHistory(f)
 		f.Close()
 	} else {
-		logger.Println("failed to read command history: ", err)
+		logger.Printf("failed to read command history at %s: %s", app.historyPath, err)
 	}
 }
 
@@ -257,7 +259,7 @@ func (app *App) saveHistory(line *liner.State) {
 
 		f.Close()
 	} else {
-		logger.Println("failed to create history file: ", err)
+		logger.Printf("failed to create history file at %s: %s", app.historyPath, err)
 	}
 }
 
