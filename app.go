@@ -175,13 +175,15 @@ func (app *App) runLiner() {
 	defer line.Close()
 
 	line.SetCtrlCAborts(true)
-
 	app.initHistory(line)
 
-	rgxFinishLine := regexp.MustCompile(";$")
+	// If input dosen't be match it, input is not finished.
+	rgxLineFinisehd := regexp.MustCompile(";$")
+
+	// If this value is false, input will be continued.
 	lineFinished := true
 
-	var input string
+	var input string // input from line
 	var err error
 
 LOOP:
@@ -203,7 +205,7 @@ LOOP:
 		case nil:
 			input = strings.Trim(input, " \n")
 
-			if lineFinished = rgxFinishLine.MatchString(input); lineFinished {
+			if lineFinished = rgxLineFinisehd.MatchString(input); lineFinished {
 			} else {
 				// If line is not finished, read next line as continue.
 				continue
@@ -215,12 +217,14 @@ LOOP:
 
 			line.AppendHistory(input)
 
+			// run slash command
 			scmd, _ := ParseSlashCommand(input)
 			if scmd != nil {
 				app.runSlashCommand(scmd)
 				continue
 			}
 
+			// run mdq
 			results, err := app.RunCmd(input, app.buildCmdArgs()...)
 			if err != nil {
 				logger.Println(err.Error())
