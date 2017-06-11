@@ -205,17 +205,9 @@ LOOP:
 		case nil:
 			input = strings.Trim(input, " \n")
 
-			if lineFinished = rgxLineFinisehd.MatchString(input); lineFinished {
-			} else {
-				// If line is not finished, read next line as continue.
-				continue
-			}
-
 			if input == "" {
 				continue
 			}
-
-			line.AppendHistory(input)
 
 			// run slash command
 			scmd, _ := ParseSlashCommand(input)
@@ -223,6 +215,14 @@ LOOP:
 				app.runSlashCommand(scmd)
 				continue
 			}
+
+			if lineFinished = rgxLineFinisehd.MatchString(input); lineFinished {
+			} else {
+				// If line is not finished, read next line as continue.
+				continue
+			}
+
+			line.AppendHistory(input)
 
 			// run mdq
 			results, err := app.RunCmd(input, app.buildCmdArgs()...)
