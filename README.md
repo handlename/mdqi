@@ -39,18 +39,22 @@ $ mdqi
 - [x] query history
 - [x] logger
 - [x] ignore empty query
-- [x] CircleCI
+- [x] CI on CircleCI
 - [x] slash command
-    - [x] `/quit`
-    - [x] `/tag (set|remove|show)`
-    - [x] `/help [category [name]]`
-    - [x] `/display (vertical|horizontal)`
-    - [x] `/v` alias for toggle display
+  - [x] `/quit`
+  - [x] `/tag (set|remove|show)`
+  - [x] `/help [category [name]]`
+  - [x] `/display (vertical|horizontal)`
+  - [x] `/v` alias for toggle display
 - [x] load configuration file
 - [x] -version option
 - [x] multi line input
-- [ ] Ctrl-Z
 - [ ] deploy from CircleCI
+- [ ] Ctrl-Z add shortcut to liner
+  - pending.
+    github.com/peterh/liner converts Ctrl-Z to beep,
+    so SIGTSTP will not reach to signal handler.
+  - https://github.com/peterh/liner/blob/88609521dc4b6c858fd4c98b628147da928ce4ac/line.go#L852-L856
 
 ## Licence
 
