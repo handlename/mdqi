@@ -15,7 +15,7 @@ It supports:
 
 ## Installation
 
-Download binary from releases and put it on `$PATH`ed place.
+Download binary from [releases](https://github.com/handlename/mdqi/releases) and put it on `$PATH`ed place.
 
 Or
 
