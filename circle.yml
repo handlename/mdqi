@@ -15,9 +15,9 @@ dependencies:
     - "${GOPATH}"
   pre:
     - mkdir $GOPATH/bin
-    - wget https://github.com/Masterminds/glide/releases/download/v0.12.3/glide-v0.12.3-linux-amd64.zip
-    - unzip glide-v0.12.3-linux-amd64.zip
-    - install linux-amd64/glide $GOPATH/bin/glide
+    - if [[ ! -e "${GOPATH}/bin/glide" ]]; then wget https://github.com/Masterminds/glide/releases/download/v0.12.3/glide-v0.12.3-linux-amd64.zip && unzip glide-v0.12.3-linux-amd64.zip && install linux-amd64/glide "$GOPATH/bin/glide"; fi
+    - if [[ ! -e "${GOPATH}/bin/ghr" ]]; then wget https://github.com/tcnksm/ghr/releases/download/v0.5.4/ghr_v0.5.4_linux_amd64.zip && unzip ghr_v0.5.4_linux_amd64.zip && install ghr "$GOPATH/bin/ghr"; fi
+    - if [[ ! -e "${GOPATH}/bin/gox" ]]; then go get -v github.com/mitchellh/gox; fi
   override:
     - cd $PROJECT_ROOT && glide install
 
@@ -29,6 +29,4 @@ deployment:
   release:
     tag: /v[0-9]+\.[0-9]+\.[0-9]+/
     commands:
-      - if [[ ! -e "${GOPATH}/bin/ghr" ]]; then wget https://github.com/tcnksm/ghr/releases/download/v0.5.4/ghr_v0.5.4_linux_amd64.zip && unzip ghr_v0.5.4_linux_amd64.zip && install ghr $GOPATH/bin/ghr; fi
-      - go get github.com/mitchellh/gox
       - make clean && make dist && make publish PROJECT_USERNAME=$CIRCLE_PROJECT_USERNAME PROJECT_REPONAME=$CIRCLE_PROJECT_REPONAME
