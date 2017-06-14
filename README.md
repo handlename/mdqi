@@ -32,25 +32,7 @@ $ mdqi
 
 ## TODO
 
-- [x] run mdq through mdqi
-- [x] display results as table
-- [x] convert mdq formatted JSON as table passed by stdin
-- [x] receive command line input
-- [x] query history
-- [x] logger
-- [x] ignore empty query
-- [x] CI on CircleCI
-- [x] slash command
-  - [x] `/quit`
-  - [x] `/tag (set|remove|show)`
-  - [x] `/help [category [name]]`
-  - [x] `/display (vertical|horizontal)`
-  - [x] `/v` alias for toggle display
-- [x] load configuration file
-- [x] -version option
-- [x] multi line input
-- [x] deploy from CircleCI
-- [ ] Ctrl-Z add shortcut to liner
+- [ ] suspend by Ctrl-Z
   - pending.
     github.com/peterh/liner converts Ctrl-Z to beep,
     so SIGTSTP will not reach to signal handler.
