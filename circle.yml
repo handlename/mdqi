@@ -11,6 +11,8 @@ checkout:
     - rsync -azC --delete ./ $PROJECT_ROOT/
 
 dependencies:
+  cache_directories:
+    - "${GOPATH}"
   pre:
     - mkdir $GOPATH/bin
     - wget https://github.com/Masterminds/glide/releases/download/v0.12.3/glide-v0.12.3-linux-amd64.zip
@@ -27,6 +29,6 @@ deployment:
   release:
     tag: /v[0-9]+\.[0-9]+\.[0-9]+/
     commands:
-      - if [[ ! -e ~/bin/ghr ]]; then wget https://github.com/tcnksm/ghr/releases/download/v0.5.4/ghr_v0.5.4_linux_amd64.zip -O /tmp/ghr_v0.5.4_linux_amd64.zip && unzip /tmp/ghr_v0.5.4_linux_amd64.zip -d ~/bin; fi
-      - make clean && make
-      - ghr -t $GITHUB_TOKEN -u $CIRCLE_PROJECT_USERNAME -r $CIRCLE_PROJECT_REPONAME --replace $(cat VERSION) dist/
+      - if [[ ! -e "${GOPATH}/bin/ghr" ]]; then wget https://github.com/tcnksm/ghr/releases/download/v0.5.4/ghr_v0.5.4_linux_amd64.zip && unzip ghr_v0.5.4_linux_amd64.zip && install ghr $GOPATH/bin/ghr; fi
+      - go get github.com/mitchellh/gox
+      - make clean && make dist && make publish PROJECT_USERNAME=$CIRCLE_PROJECT_USERNAME PROJECT_REPONAME=$CIRCLE_PROJECT_REPONAME
