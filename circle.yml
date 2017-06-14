@@ -22,3 +22,11 @@ dependencies:
 test:
   override:
     - cd $PROJECT_ROOT && go test -v $(glide novendor)
+
+deployment:
+  release:
+    tag: /v[0-9]+\.[0-9]+\.[0-9]+/
+    commands:
+      - if [[ ! -e ~/bin/ghr ]]; then wget https://github.com/tcnksm/ghr/releases/download/v0.5.4/ghr_v0.5.4_linux_amd64.zip -O /tmp/ghr_v0.5.4_linux_amd64.zip && unzip /tmp/ghr_v0.5.4_linux_amd64.zip -d ~/bin; fi
+      - make clean && make
+      - ghr -t $GITHUB_TOKEN -u $CIRCLE_PROJECT_USERNAME -r $CIRCLE_PROJECT_REPONAME --replace $(cat VERSION) dist/

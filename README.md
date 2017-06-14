@@ -49,7 +49,7 @@ $ mdqi
 - [x] load configuration file
 - [x] -version option
 - [x] multi line input
-- [ ] deploy from CircleCI
+- [x] deploy from CircleCI
 - [ ] Ctrl-Z add shortcut to liner
   - pending.
     github.com/peterh/liner converts Ctrl-Z to beep,
