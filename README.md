@@ -9,9 +9,11 @@ It supports:
 - Query history
 - Remember tag
 
-## Example
+## Demo
 
-// TODO: gif animation
+[![demo](https://asciinema.org/a/8b4vvj2ii3hfo3vt3htf00ok1.png)](https://asciinema.org/a/8b4vvj2ii3hfo3vt3htf00ok1)
+
+Recorded by [asciinema](https://asciinema.org/).
 
 ## Installation
 
