@@ -130,11 +130,6 @@ func (c SlashCommandTagClear) Help() string {
 }
 
 func (c SlashCommandTagClear) Handle(app *App, cmd *SlashCommand) error {
-	if len(cmd.Args) != 1 {
-		fmt.Println(c.Help())
-		return nil
-	}
-
 	app.ClearTag()
 	debug.Printf("tag cleard: %+v\n", app.GetTag())
 

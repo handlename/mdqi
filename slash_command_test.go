@@ -199,9 +199,7 @@ func TestSlashCommandTagClear(t *testing.T) {
 	app.SetTag("db1")
 
 	def := SlashCommandTagClear{}
-	def.Handle(app, &SlashCommand{
-		Args: []string{"db1"},
-	})
+	def.Handle(app, &SlashCommand{})
 
 	if tag := app.GetTag(); tag != "" {
 		t.Fatal("failed to remove tag:", tag)
@@ -221,9 +219,7 @@ func TestSlashCommandTagShow(t *testing.T) {
 	app.SetTag("db1")
 
 	def := SlashCommandTagShow{}
-	def.Handle(app, &SlashCommand{
-		Args: []string{"db1"},
-	})
+	def.Handle(app, &SlashCommand{})
 
 	expect := `
 +-------+-----+
