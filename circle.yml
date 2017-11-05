@@ -15,15 +15,15 @@ dependencies:
     - "${GOPATH}"
   pre:
     - mkdir $GOPATH/bin
-    - if [[ ! -e "${GOPATH}/bin/glide" ]]; then wget https://github.com/Masterminds/glide/releases/download/v0.12.3/glide-v0.12.3-linux-amd64.zip && unzip glide-v0.12.3-linux-amd64.zip && install linux-amd64/glide "$GOPATH/bin/glide"; fi
+    - if [[ ! -e "${GOPATH}/bin/dep" ]]; then wget https://github.com/golang/dep/releases/download/v0.3.2/dep-linux-amd64 && install dep-linux-amd64 "$GOPATH/bin/dep"; fi
     - if [[ ! -e "${GOPATH}/bin/ghr" ]]; then wget https://github.com/tcnksm/ghr/releases/download/v0.5.4/ghr_v0.5.4_linux_amd64.zip && unzip ghr_v0.5.4_linux_amd64.zip && install ghr "$GOPATH/bin/ghr"; fi
     - if [[ ! -e "${GOPATH}/bin/gox" ]]; then go get -v github.com/mitchellh/gox; fi
   override:
-    - cd $PROJECT_ROOT && glide install
+    - cd $PROJECT_ROOT && dep ensure
 
 test:
   override:
-    - cd $PROJECT_ROOT && go test -v $(glide novendor)
+    - cd $PROJECT_ROOT && go test -v
 
 deployment:
   release:
