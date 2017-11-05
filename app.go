@@ -145,7 +145,7 @@ func lookMdqPath(path string) error {
 	return err
 }
 
-func (app *App) slashCommandCategories() []string {
+func (app *App) SlashCommandCategories() []string {
 	defs := app.slashCommandDefinition
 	keys := make([]string, 0, len(defs))
 
@@ -156,7 +156,7 @@ func (app *App) slashCommandCategories() []string {
 	return keys
 }
 
-func (app *App) slashCommandNames(category string) []string {
+func (app *App) SlashCommandNames(category string) []string {
 	defs := app.slashCommandDefinition[category]
 	keys := make([]string, 0, len(defs))
 

@@ -1,12 +1,9 @@
 package mdqi
 
 import (
-	"bytes"
 	"errors"
 	"reflect"
 	"testing"
-
-	"github.com/handlename/mdqi/test"
 )
 
 var ErrTest = errors.New("error for test")
@@ -18,16 +15,6 @@ func (d TestDefFoo) Name() string     { return "foo" }
 func (d TestDefFoo) Example() string  { return "/test foo" }
 func (d TestDefFoo) Help() string     { return "I'm foo." }
 func (d TestDefFoo) Handle(app *App, cmd *SlashCommand) error {
-	return ErrTest
-}
-
-type TestDefBar struct{}
-
-func (d TestDefBar) Category() string { return "test" }
-func (d TestDefBar) Name() string     { return "bar" }
-func (d TestDefBar) Example() string  { return "/test bar" }
-func (d TestDefBar) Help() string     { return "I'm bar." }
-func (d TestDefBar) Handle(app *App, cmd *SlashCommand) error {
 	return ErrTest
 }
 
@@ -168,164 +155,5 @@ func TestFindSlashCommandDefinition(t *testing.T) {
 		if def != nil {
 			t.Errorf("unexpected definition: %#v", def)
 		}
-	}
-}
-
-func TestSlashCommandExit(t *testing.T) {
-	app, _ := NewApp(Conf{})
-
-	def := SlashCommandExit{}
-	def.Handle(app, nil)
-
-	if app.Alive {
-		t.Fatal("app.Alive must be false.")
-	}
-}
-
-func TestSlashCommandTagAdd(t *testing.T) {
-	app, _ := NewApp(Conf{})
-
-	def := SlashCommandTagSet{}
-	def.Handle(app, &SlashCommand{
-		Args: []string{"db1"},
-	})
-
-	if tag := app.GetTag(); tag != "db1" {
-		t.Fatal("unexpected tag:", tag)
-	}
-}
-
-func TestSlashCommandTagClear(t *testing.T) {
-	app, _ := NewApp(Conf{})
-
-	app.SetTag("db1")
-
-	def := SlashCommandTagClear{}
-	def.Handle(app, &SlashCommand{})
-
-	if tag := app.GetTag(); tag != "" {
-		t.Fatal("failed to remove tag:", tag)
-	}
-}
-
-func TestSlashCommandTagShow(t *testing.T) {
-	orgOutput := DefaultOutput
-	var out bytes.Buffer
-	DefaultOutput = &out
-	defer func() {
-		DefaultOutput = orgOutput
-	}()
-
-	app, _ := NewApp(Conf{})
-
-	app.SetTag("db1")
-
-	def := SlashCommandTagShow{}
-	def.Handle(app, &SlashCommand{})
-
-	expect := `
-+-------+-----+
-|  db   | tag |
-+-------+-----+
-| (mdq) | db1 |
-+-------+-----+
-`
-
-	if s := out.String(); !test.CompareAfterTrim(s, expect) {
-		t.Fatalf("unexpected output:\n%s", s)
-	}
-}
-
-func TestSlashCommandHelp(t *testing.T) {
-	orgOutput := DefaultOutput
-	var out bytes.Buffer
-	DefaultOutput = &out
-	defer func() {
-		DefaultOutput = orgOutput
-	}()
-
-	app, _ := NewApp(Conf{})
-	app.RegisterSlashCommandDefinition(TestDefFoo{})
-	app.RegisterSlashCommandDefinition(TestDefBar{})
-
-	def := SlashCommandHelp{}
-	def.Handle(app, &SlashCommand{})
-
-	expect := `
-+-------+----------+------+-----------+----------+
-|  db   | category | name |  example  |   help   |
-+-------+----------+------+-----------+----------+
-| (mdq) | test     | bar  | /test bar | I'm bar. |
-| (mdq) | test     | foo  | /test foo | I'm foo. |
-+-------+----------+------+-----------+----------+
-`
-
-	if s := out.String(); !test.CompareAfterTrim(s, expect) {
-		t.Fatalf("unexpected output:\n%s", s)
-	}
-}
-
-func TestSlashCommandDisplay(t *testing.T) {
-	app, _ := NewApp(Conf{})
-
-	def := SlashCommandDisplay{}
-
-	{
-		// invalid format
-
-		if err := def.Handle(app, &SlashCommand{Args: []string{"foo"}}); err != ErrSlashCommandInvalidArgs {
-			t.Error("must be error")
-		}
-	}
-
-	{
-		// format: vertical
-
-		if err := def.Handle(app, &SlashCommand{Args: []string{"vertical"}}); err != nil {
-			t.Errorf("unexpected error: %s", err)
-		}
-
-		switch ty := app.Printer.(type) {
-		case VerticalPrinter:
-		default:
-			t.Errorf("unexpected printer type: %s", ty)
-		}
-	}
-
-	{
-		// format: horizontal
-
-		if err := def.Handle(app, &SlashCommand{Args: []string{"horizontal"}}); err != nil {
-			t.Errorf("unexpected error: %s", err)
-		}
-
-		switch ty := app.Printer.(type) {
-		case HorizontalPrinter:
-		default:
-			t.Errorf("unexpected printer type: %s", ty)
-		}
-	}
-}
-
-func TestSlashCommandToggleDisplay(t *testing.T) {
-	app, _ := NewApp(Conf{})
-	app.SetPrinterByName("horizontal")
-
-	def := SlashCommandToggleDisplay{}
-
-	if err := def.Handle(app, &SlashCommand{}); err != nil {
-		t.Errorf("unexpected error: %s", err)
-	}
-
-	if n := app.Printer.Name(); n != "vertical" {
-		t.Error("unexpected printer:", n)
-	}
-
-	if err := def.Handle(app, &SlashCommand{}); err != nil {
-		t.Errorf("unexpected error: %s", err)
-	}
-
-	if n := app.Printer.Name(); n != "horizontal" {
-		t.Error("unexpected printer:", n)
 	}
 }
