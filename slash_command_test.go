@@ -209,11 +209,11 @@ func TestSlashCommandTagClear(t *testing.T) {
 }
 
 func TestSlashCommandTagShow(t *testing.T) {
-	orgOutput := defaultOutput
+	orgOutput := DefaultOutput
 	var out bytes.Buffer
-	defaultOutput = &out
+	DefaultOutput = &out
 	defer func() {
-		defaultOutput = orgOutput
+		DefaultOutput = orgOutput
 	}()
 
 	app, _ := NewApp(Conf{})
@@ -237,11 +237,11 @@ func TestSlashCommandTagShow(t *testing.T) {
 }
 
 func TestSlashCommandHelp(t *testing.T) {
-	orgOutput := defaultOutput
+	orgOutput := DefaultOutput
 	var out bytes.Buffer
-	defaultOutput = &out
+	DefaultOutput = &out
 	defer func() {
-		defaultOutput = orgOutput
+		DefaultOutput = orgOutput
 	}()
 
 	app, _ := NewApp(Conf{})

@@ -7,7 +7,7 @@ import (
 	"github.com/olekukonko/tablewriter"
 )
 
-var defaultOutput io.Writer
+var DefaultOutput io.Writer
 
 type Printer interface {
 	Name() string
@@ -83,7 +83,7 @@ func (p VerticalPrinter) Print(out io.Writer, results []Result) error {
 }
 
 func Print(printer Printer, results []Result) error {
-	Fprint(defaultOutput, printer, results)
+	Fprint(DefaultOutput, printer, results)
 	return nil
 }
 

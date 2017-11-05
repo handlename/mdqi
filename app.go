@@ -59,7 +59,7 @@ type Result struct {
 }
 
 func init() {
-	defaultOutput = os.Stdout
+	DefaultOutput = os.Stdout
 }
 
 func NewApp(conf Conf) (*App, error) {
