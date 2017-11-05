@@ -6,7 +6,7 @@ import (
 	"github.com/handlename/mdqi"
 )
 
-func TestSlashCommandExit(t *testing.T) {
+func TestExit(t *testing.T) {
 	app, _ := mdqi.NewApp(mdqi.Conf{})
 
 	def := Exit{}

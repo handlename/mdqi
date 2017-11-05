@@ -6,7 +6,7 @@ import (
 	"github.com/handlename/mdqi"
 )
 
-func TestSlashCommandDisplay(t *testing.T) {
+func TestDisplay(t *testing.T) {
 	app, _ := mdqi.NewApp(mdqi.Conf{})
 
 	def := Display{}
@@ -48,7 +48,7 @@ func TestSlashCommandDisplay(t *testing.T) {
 	}
 }
 
-func TestSlashCommandToggleDisplay(t *testing.T) {
+func TestToggleDisplay(t *testing.T) {
 	app, _ := mdqi.NewApp(mdqi.Conf{})
 	app.SetPrinterByName("horizontal")
 

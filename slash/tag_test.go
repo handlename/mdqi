@@ -8,7 +8,7 @@ import (
 	"github.com/handlename/mdqi/test"
 )
 
-func TestSlashCommandTagAdd(t *testing.T) {
+func TestTagAdd(t *testing.T) {
 	app, _ := mdqi.NewApp(mdqi.Conf{})
 
 	def := TagSet{}
@@ -21,7 +21,7 @@ func TestSlashCommandTagAdd(t *testing.T) {
 	}
 }
 
-func TestSlashCommandTagClear(t *testing.T) {
+func TestTagClear(t *testing.T) {
 	app, _ := mdqi.NewApp(mdqi.Conf{})
 
 	app.SetTag("db1")
@@ -34,7 +34,7 @@ func TestSlashCommandTagClear(t *testing.T) {
 	}
 }
 
-func TestSlashCommandTagShow(t *testing.T) {
+func TestTagShow(t *testing.T) {
 	orgOutput := mdqi.DefaultOutput
 	var out bytes.Buffer
 	mdqi.DefaultOutput = &out

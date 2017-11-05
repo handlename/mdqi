@@ -31,7 +31,7 @@ func (d TestDefBar) Handle(app *mdqi.App, cmd *mdqi.SlashCommand) error {
 	return ErrTest
 }
 
-func TestSlashCommandHelp(t *testing.T) {
+func TestHelp(t *testing.T) {
 	orgOutput := mdqi.DefaultOutput
 	var out bytes.Buffer
 	mdqi.DefaultOutput = &out
