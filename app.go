@@ -218,10 +218,10 @@ LOOP:
 		}
 
 		if lineFinished {
-			input, err = line.Prompt("mdq> ")
+			input, err = line.Prompt(app.formatPrompt(false))
 		} else {
 			var l string
-			l, err = line.Prompt("   | ")
+			l, err = line.Prompt(app.formatPrompt(true))
 			input = strings.Join([]string{input, l}, " ")
 		}
 
@@ -346,6 +346,18 @@ func (app *App) SetTag(tag string) {
 
 func (app *App) ClearTag() {
 	app.tag = ""
+}
+
+func (app *App) formatPrompt(continues bool) string {
+	if continues {
+		return "   | "
+	} else {
+		if tag := app.GetTag(); tag == "" {
+			return "mdq> "
+		} else {
+			return fmt.Sprintf("mdq[%s]> ", app.GetTag())
+		}
+	}
 }
 
 // ExpandPath expands file path like `~/path/to/foo`
