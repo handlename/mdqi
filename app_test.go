@@ -2,6 +2,8 @@ package mdqi
 
 import (
 	"testing"
+
+	"github.com/handlename/mdqi/test"
 )
 
 func TestManageTag(t *testing.T) {
@@ -33,13 +35,13 @@ func TestManageTag(t *testing.T) {
 func TestBulidCmdArgs(t *testing.T) {
 	app, _ := NewApp(Conf{})
 
-	if args := app.buildCmdArgs(); !sortEqual(args, []string{}) {
+	if args := app.buildCmdArgs(); !test.SortEqual(args, []string{}) {
 		t.Errorf("unexpected args: %#v", args)
 	}
 
 	app.SetTag("foo")
 
-	if args := app.buildCmdArgs(); !sortEqual(args, []string{"--tag=foo"}) {
+	if args := app.buildCmdArgs(); !test.SortEqual(args, []string{"--tag=foo"}) {
 		t.Errorf("unexpected args: %+v", args)
 	}
 }

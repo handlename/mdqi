@@ -5,6 +5,8 @@ import (
 	"errors"
 	"reflect"
 	"testing"
+
+	"github.com/handlename/mdqi/test"
 )
 
 var ErrTest = errors.New("error for test")
@@ -229,7 +231,7 @@ func TestSlashCommandTagShow(t *testing.T) {
 +-------+-----+
 `
 
-	if s := out.String(); !compareAfterTrim(s, expect) {
+	if s := out.String(); !test.CompareAfterTrim(s, expect) {
 		t.Fatalf("unexpected output:\n%s", s)
 	}
 }
@@ -258,7 +260,7 @@ func TestSlashCommandHelp(t *testing.T) {
 +-------+----------+------+-----------+----------+
 `
 
-	if s := out.String(); !compareAfterTrim(s, expect) {
+	if s := out.String(); !test.CompareAfterTrim(s, expect) {
 		t.Fatalf("unexpected output:\n%s", s)
 	}
 }

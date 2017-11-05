@@ -1,4 +1,4 @@
-package mdqi
+package test
 
 import (
 	"reflect"
@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func compareAfterTrim(a, b string) bool {
+func CompareAfterTrim(a, b string) bool {
 	re := regexp.MustCompile(" +\n")
 
 	a = re.ReplaceAllString(a, "\n")
@@ -19,7 +19,7 @@ func compareAfterTrim(a, b string) bool {
 	return a == b
 }
 
-func sortEqual(a, b []string) bool {
+func SortEqual(a, b []string) bool {
 	sort.Strings(a)
 	sort.Strings(b)
 
