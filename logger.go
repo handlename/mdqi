@@ -7,11 +7,11 @@ import (
 	"os"
 )
 
-var logger = func() *log.Logger {
+var Logger = func() *log.Logger {
 	return log.New(os.Stderr, "", log.Ldate|log.Ltime)
 }()
 
-var debug = func() *log.Logger {
+var Debug = func() *log.Logger {
 	var out io.Writer
 
 	if os.Getenv("DEBUG") != "" {

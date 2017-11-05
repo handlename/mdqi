@@ -3,6 +3,8 @@ package mdqi
 import (
 	"bytes"
 	"testing"
+
+	"github.com/handlename/mdqi/test"
 )
 
 var printTestResults = []Result{
@@ -54,7 +56,7 @@ func TestHorizontalPrinter(t *testing.T) {
 +-----+----+--------+
 `
 
-	if s := out.String(); !compareAfterTrim(s, expect) {
+	if s := out.String(); !test.CompareAfterTrim(s, expect) {
 		t.Fatalf("unexpected output:\n%s", s)
 	}
 }
@@ -80,7 +82,7 @@ func TestVerticalPrinter(t *testing.T) {
   name : qux
 `
 
-	if s := out.String(); !compareAfterTrim(s, expect) {
+	if s := out.String(); !test.CompareAfterTrim(s, expect) {
 		t.Fatalf("unexpected output:\n%s", s)
 	}
 }

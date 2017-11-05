@@ -27,7 +27,7 @@ func (app *App) RunCmd(query string, args ...string) (results []Result, err erro
 }
 
 func runCmd(path string, query string, args ...string) (out []byte, err error) {
-	debug.Printf("runs command: echo '%s' | %s %s", query, path, strings.Join(args, " "))
+	Debug.Printf("runs command: echo '%s' | %s %s", query, path, strings.Join(args, " "))
 
 	cmd := exec.Command(path, args...)
 
@@ -56,7 +56,7 @@ func runCmd(path string, query string, args ...string) (out []byte, err error) {
 	}
 
 	if o, _ := ioutil.ReadAll(stderr); 0 < len(o) {
-		logger.Println(string(o))
+		Logger.Println(string(o))
 	}
 
 	if out, err = ioutil.ReadAll(stdout); err != nil {

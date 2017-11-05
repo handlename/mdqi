@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/handlename/mdqi"
+	"github.com/handlename/mdqi/slash"
 )
 
 var version string
@@ -39,13 +40,13 @@ func main() {
 		os.Exit(1)
 	}
 
-	app.RegisterSlashCommandDefinition(mdqi.SlashCommandDisplay{})
-	app.RegisterSlashCommandDefinition(mdqi.SlashCommandExit{})
-	app.RegisterSlashCommandDefinition(mdqi.SlashCommandHelp{})
-	app.RegisterSlashCommandDefinition(mdqi.SlashCommandTagClear{})
-	app.RegisterSlashCommandDefinition(mdqi.SlashCommandTagSet{})
-	app.RegisterSlashCommandDefinition(mdqi.SlashCommandTagShow{})
-	app.RegisterSlashCommandDefinition(mdqi.SlashCommandToggleDisplay{})
+	app.RegisterSlashCommandDefinition(slash.Display{})
+	app.RegisterSlashCommandDefinition(slash.Exit{})
+	app.RegisterSlashCommandDefinition(slash.Help{})
+	app.RegisterSlashCommandDefinition(slash.TagClear{})
+	app.RegisterSlashCommandDefinition(slash.TagSet{})
+	app.RegisterSlashCommandDefinition(slash.TagShow{})
+	app.RegisterSlashCommandDefinition(slash.ToggleDisplay{})
 
 	app.Run()
 }

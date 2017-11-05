@@ -108,9 +108,9 @@ func TestConfigSetMdqiDefaultDisplay(t *testing.T) {
 		t.Error("unexpected error:", err)
 	}
 
-	switch app.printer.(type) {
+	switch app.Printer.(type) {
 	case VerticalPrinter:
 	default:
-		t.Errorf("unexpected printer %s:", app.printer)
+		t.Errorf("unexpected printer %s:", app.Printer)
 	}
 }

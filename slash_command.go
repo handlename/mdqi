@@ -1,9 +1,7 @@
 package mdqi
 
 import (
-	"fmt"
 	"regexp"
-	"sort"
 )
 
 type SlashCommand struct {
@@ -55,7 +53,7 @@ func (app *App) RegisterSlashCommandDefinition(d SlashCommandDefinition) error {
 
 	if c := app.slashCommandDefinition[category]; c != nil {
 		if c[name] != nil {
-			logger.Printf("there are definition for same category(=%s) and name(=%s), so current one will be overwritten.", category, name)
+			Logger.Printf("there are definition for same category(=%s) and name(=%s), so current one will be overwritten.", category, name)
 		}
 	}
 
@@ -80,182 +78,4 @@ func (app *App) FindSlashCommandDefinition(category, name string) (SlashCommandD
 	}
 
 	return c[name], nil
-}
-
-type SlashCommandExit struct{}
-
-func (c SlashCommandExit) Category() string { return "exit" }
-func (c SlashCommandExit) Name() string     { return "" }
-func (c SlashCommandExit) Example() string  { return "/exit" }
-
-func (c SlashCommandExit) Help() string {
-	return "Exit mdqi."
-}
-
-func (c SlashCommandExit) Handle(app *App, cmd *SlashCommand) error {
-	app.Alive = false
-	return nil
-}
-
-type SlashCommandTagSet struct{}
-
-func (c SlashCommandTagSet) Category() string { return "tag" }
-func (c SlashCommandTagSet) Name() string     { return "set" }
-func (c SlashCommandTagSet) Example() string  { return "/tag set {tagname}" }
-
-func (c SlashCommandTagSet) Help() string {
-	return "Set tag to pass to mdq's --tag option."
-}
-
-func (c SlashCommandTagSet) Handle(app *App, cmd *SlashCommand) error {
-	if len(cmd.Args) != 1 {
-		fmt.Println(c.Help())
-		return nil
-	}
-
-	app.SetTag(cmd.Args[0])
-	debug.Println("tag stored:", app.GetTag())
-
-	return nil
-}
-
-type SlashCommandTagClear struct{}
-
-func (c SlashCommandTagClear) Category() string { return "tag" }
-func (c SlashCommandTagClear) Name() string     { return "clear" }
-func (c SlashCommandTagClear) Example() string  { return "/tag clear {tagname}" }
-
-func (c SlashCommandTagClear) Help() string {
-	return "Clear tag to pass to mdq's --tag option."
-}
-
-func (c SlashCommandTagClear) Handle(app *App, cmd *SlashCommand) error {
-	app.ClearTag()
-	debug.Printf("tag cleard: %+v\n", app.GetTag())
-
-	return nil
-}
-
-type SlashCommandTagShow struct{}
-
-func (c SlashCommandTagShow) Category() string { return "tag" }
-func (c SlashCommandTagShow) Name() string     { return "show" }
-func (c SlashCommandTagShow) Example() string  { return "/tag show" }
-
-func (c SlashCommandTagShow) Help() string {
-	return "Show registered tags to pass to mdq's --tag option."
-}
-
-func (c SlashCommandTagShow) Handle(app *App, cmd *SlashCommand) error {
-	results := []Result{
-		Result{
-			Database: "(mdq)",
-			Columns:  []string{"tag"},
-			Rows: []map[string]interface{}{
-				map[string]interface{}{"tag": app.GetTag()},
-			},
-		},
-	}
-
-	Print(app.printer, results)
-
-	return nil
-}
-
-type SlashCommandHelp struct{}
-
-func (c SlashCommandHelp) Category() string { return "help" }
-func (c SlashCommandHelp) Name() string     { return "" }
-func (c SlashCommandHelp) Example() string  { return "/help" }
-
-func (c SlashCommandHelp) Help() string {
-	return "Show this help."
-}
-
-func (c SlashCommandHelp) Handle(app *App, cmd *SlashCommand) error {
-	rows := []map[string]interface{}{}
-
-	categories := app.slashCommandCategories()
-	sort.Strings(categories)
-
-	for _, category := range categories {
-		inCategory := app.slashCommandDefinition[category]
-
-		names := app.slashCommandNames(category)
-		sort.Strings(names)
-
-		for _, name := range names {
-			def := inCategory[name]
-
-			rows = append(rows, map[string]interface{}{
-				"category": category,
-				"name":     name,
-				"example":  def.Example(),
-				"help":     def.Help(),
-			})
-		}
-	}
-
-	results := []Result{
-		Result{
-			Database: "(mdq)",
-			Columns:  []string{"category", "name", "example", "help"},
-			Rows:     rows,
-		},
-	}
-
-	Print(app.printer, results)
-
-	return nil
-}
-
-type SlashCommandDisplay struct{}
-
-func (c SlashCommandDisplay) Category() string { return "display" }
-func (c SlashCommandDisplay) Name() string     { return "set" }
-func (c SlashCommandDisplay) Example() string  { return "/display set (horizontal|vertical)" }
-
-func (c SlashCommandDisplay) Help() string {
-	return "Set display format."
-}
-
-func (c SlashCommandDisplay) Handle(app *App, cmd *SlashCommand) error {
-	if len(cmd.Args) != 1 {
-		return ErrSlashCommandInvalidArgs
-	}
-
-	if err := app.SetPrinterByName(cmd.Args[0]); err != nil {
-		debug.Printf("error on SetPrinterByName: %s", err)
-		return ErrSlashCommandInvalidArgs
-	}
-
-	debug.Printf("printer has been changed to %s", cmd.Args[0])
-
-	return nil
-}
-
-type SlashCommandToggleDisplay struct{}
-
-func (c SlashCommandToggleDisplay) Category() string { return "v" }
-func (c SlashCommandToggleDisplay) Name() string     { return "" }
-func (c SlashCommandToggleDisplay) Example() string  { return "/v" }
-
-func (c SlashCommandToggleDisplay) Help() string {
-	return "Toggle display type between horizontal and vertical."
-}
-
-func (c SlashCommandToggleDisplay) Handle(app *App, cmd *SlashCommand) error {
-	name := "horizontal"
-
-	switch app.printer.(type) {
-	case HorizontalPrinter:
-		name = "vertical"
-	case VerticalPrinter:
-		name = "horizontal"
-	}
-
-	app.SetPrinterByName(name)
-	debug.Println("printer has been changed to", name)
-
-	return nil
 }
