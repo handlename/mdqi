@@ -49,6 +49,7 @@ type App struct {
 	// tag stores tag value for --tag option of mdq.
 	tag string
 
+	// Printer prints results.
 	Printer Printer
 }
 
@@ -70,12 +71,12 @@ func NewApp(conf Conf) (*App, error) {
 			return nil, errors.Wrapf(err, "mdq command not found at %s", path)
 		}
 		mdqPath = path
-		debug.Println("conf.Mdq.Bin =", path)
+		Debug.Println("conf.Mdq.Bin =", path)
 	}
 
 	// mdq config path
 	if path := conf.Mdq.Config; path != "" {
-		debug.Println("conf.Mdq.Config =", path)
+		Debug.Println("conf.Mdq.Config =", path)
 	}
 
 	// create history file
@@ -85,7 +86,7 @@ func NewApp(conf Conf) (*App, error) {
 		if historyPath, err = defaultHistoryPath(); err != nil {
 			return nil, errors.Wrap(err, "failed to create history file at default path")
 		}
-		debug.Println("conf.Mdqi.History =", historyPath)
+		Debug.Println("conf.Mdqi.History =", historyPath)
 	}
 	if err := createHistoryFile(historyPath); err != nil {
 		return nil, errors.Wrapf(err, "failed to create history file at %s", historyPath)
@@ -104,7 +105,7 @@ func NewApp(conf Conf) (*App, error) {
 	// set default tag
 	if tag := conf.Mdqi.DefaultTag; tag != "" {
 		app.SetTag(tag)
-		debug.Println("conf.Mdqi.DefaultTag =", tag)
+		Debug.Println("conf.Mdqi.DefaultTag =", tag)
 	}
 
 	// set default display
@@ -113,7 +114,7 @@ func NewApp(conf Conf) (*App, error) {
 			return nil, errors.Wrap(err, "failed to set default printer")
 		}
 
-		debug.Println("conf.Mdqi.DefaultDisplay =", display)
+		Debug.Println("conf.Mdqi.DefaultDisplay =", display)
 	}
 
 	return app, nil
@@ -227,18 +228,18 @@ LOOP:
 			// run mdq
 			results, err := app.RunCmd(input, app.buildCmdArgs()...)
 			if err != nil {
-				logger.Println(err.Error())
+				Logger.Println(err.Error())
 			}
 
 			Print(app.Printer, results)
 		case liner.ErrPromptAborted:
-			logger.Println("aborted")
+			Logger.Println("aborted")
 			break LOOP
 		case io.EOF:
 			fmt.Println("bye")
 			break LOOP
 		default:
-			logger.Println("error on reading line: ", err)
+			Logger.Println("error on reading line: ", err)
 			break LOOP
 		}
 
@@ -251,19 +252,19 @@ func (app *App) initHistory(line *liner.State) {
 		line.ReadHistory(f)
 		f.Close()
 	} else {
-		logger.Printf("failed to read command history at %s: %s", app.historyPath, err)
+		Logger.Printf("failed to read command history at %s: %s", app.historyPath, err)
 	}
 }
 
 func (app *App) saveHistory(line *liner.State) {
 	if f, err := os.Create(app.historyPath); err == nil {
 		if _, err := line.WriteHistory(f); err != nil {
-			logger.Println("failed to write history: ", err)
+			Logger.Println("failed to write history: ", err)
 		}
 
 		f.Close()
 	} else {
-		logger.Printf("failed to create history file at %s: %s", app.historyPath, err)
+		Logger.Printf("failed to create history file at %s: %s", app.historyPath, err)
 	}
 }
 
@@ -289,10 +290,10 @@ func (app *App) runSlashCommand(scmd *SlashCommand) {
 	switch err {
 	case nil:
 		if err := sdef.Handle(app, scmd); err != nil {
-			logger.Println("failed to handle slash command:", err)
+			Logger.Println("failed to handle slash command:", err)
 		}
 	case ErrSlashCommandNotFound:
-		logger.Println("unknown slash command")
+		Logger.Println("unknown slash command")
 	}
 
 	return

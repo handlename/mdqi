@@ -55,7 +55,7 @@ func (app *App) RegisterSlashCommandDefinition(d SlashCommandDefinition) error {
 
 	if c := app.slashCommandDefinition[category]; c != nil {
 		if c[name] != nil {
-			logger.Printf("there are definition for same category(=%s) and name(=%s), so current one will be overwritten.", category, name)
+			Logger.Printf("there are definition for same category(=%s) and name(=%s), so current one will be overwritten.", category, name)
 		}
 	}
 
@@ -114,7 +114,7 @@ func (c SlashCommandTagSet) Handle(app *App, cmd *SlashCommand) error {
 	}
 
 	app.SetTag(cmd.Args[0])
-	debug.Println("tag stored:", app.GetTag())
+	Debug.Println("tag stored:", app.GetTag())
 
 	return nil
 }
@@ -131,7 +131,7 @@ func (c SlashCommandTagClear) Help() string {
 
 func (c SlashCommandTagClear) Handle(app *App, cmd *SlashCommand) error {
 	app.ClearTag()
-	debug.Printf("tag cleard: %+v\n", app.GetTag())
+	Debug.Printf("tag cleard: %+v\n", app.GetTag())
 
 	return nil
 }
@@ -225,11 +225,11 @@ func (c SlashCommandDisplay) Handle(app *App, cmd *SlashCommand) error {
 	}
 
 	if err := app.SetPrinterByName(cmd.Args[0]); err != nil {
-		debug.Printf("error on SetPrinterByName: %s", err)
+		Debug.Printf("error on SetPrinterByName: %s", err)
 		return ErrSlashCommandInvalidArgs
 	}
 
-	debug.Printf("printer has been changed to %s", cmd.Args[0])
+	Debug.Printf("printer has been changed to %s", cmd.Args[0])
 
 	return nil
 }
@@ -255,7 +255,7 @@ func (c SlashCommandToggleDisplay) Handle(app *App, cmd *SlashCommand) error {
 	}
 
 	app.SetPrinterByName(name)
-	debug.Println("printer has been changed to", name)
+	Debug.Println("printer has been changed to", name)
 
 	return nil
 }
