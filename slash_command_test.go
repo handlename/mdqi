@@ -285,7 +285,7 @@ func TestSlashCommandDisplay(t *testing.T) {
 			t.Errorf("unexpected error: %s", err)
 		}
 
-		switch ty := app.printer.(type) {
+		switch ty := app.Printer.(type) {
 		case VerticalPrinter:
 		default:
 			t.Errorf("unexpected printer type: %s", ty)
@@ -299,7 +299,7 @@ func TestSlashCommandDisplay(t *testing.T) {
 			t.Errorf("unexpected error: %s", err)
 		}
 
-		switch ty := app.printer.(type) {
+		switch ty := app.Printer.(type) {
 		case HorizontalPrinter:
 		default:
 			t.Errorf("unexpected printer type: %s", ty)
@@ -317,7 +317,7 @@ func TestSlashCommandToggleDisplay(t *testing.T) {
 		t.Errorf("unexpected error: %s", err)
 	}
 
-	if n := app.printer.Name(); n != "vertical" {
+	if n := app.Printer.Name(); n != "vertical" {
 		t.Error("unexpected printer:", n)
 	}
 
@@ -325,7 +325,7 @@ func TestSlashCommandToggleDisplay(t *testing.T) {
 		t.Errorf("unexpected error: %s", err)
 	}
 
-	if n := app.printer.Name(); n != "horizontal" {
+	if n := app.Printer.Name(); n != "horizontal" {
 		t.Error("unexpected printer:", n)
 	}
 }

@@ -157,7 +157,7 @@ func (c SlashCommandTagShow) Handle(app *App, cmd *SlashCommand) error {
 		},
 	}
 
-	Print(app.printer, results)
+	Print(app.Printer, results)
 
 	return nil
 }
@@ -204,7 +204,7 @@ func (c SlashCommandHelp) Handle(app *App, cmd *SlashCommand) error {
 		},
 	}
 
-	Print(app.printer, results)
+	Print(app.Printer, results)
 
 	return nil
 }
@@ -247,7 +247,7 @@ func (c SlashCommandToggleDisplay) Help() string {
 func (c SlashCommandToggleDisplay) Handle(app *App, cmd *SlashCommand) error {
 	name := "horizontal"
 
-	switch app.printer.(type) {
+	switch app.Printer.(type) {
 	case HorizontalPrinter:
 		name = "vertical"
 	case VerticalPrinter:

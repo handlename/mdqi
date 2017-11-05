@@ -49,7 +49,7 @@ type App struct {
 	// tag stores tag value for --tag option of mdq.
 	tag string
 
-	printer Printer
+	Printer Printer
 }
 
 type Result struct {
@@ -98,7 +98,7 @@ func NewApp(conf Conf) (*App, error) {
 		mdqConfigPath:          conf.Mdq.Config,
 		historyPath:            historyPath,
 		slashCommandDefinition: map[string]map[string]SlashCommandDefinition{},
-		printer:                HorizontalPrinter{},
+		Printer:                HorizontalPrinter{},
 	}
 
 	// set default tag
@@ -230,7 +230,7 @@ LOOP:
 				logger.Println(err.Error())
 			}
 
-			Print(app.printer, results)
+			Print(app.Printer, results)
 		case liner.ErrPromptAborted:
 			logger.Println("aborted")
 			break LOOP
@@ -302,9 +302,9 @@ func (app *App) SetPrinterByName(name string) error {
 
 	switch name {
 	case "horizontal":
-		app.printer = HorizontalPrinter{}
+		app.Printer = HorizontalPrinter{}
 	case "vertical":
-		app.printer = VerticalPrinter{}
+		app.Printer = VerticalPrinter{}
 	default:
 		return ErrUnknownPrinterName
 	}

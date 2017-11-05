@@ -55,7 +55,7 @@ func TestSetPrinterByName(t *testing.T) {
 			t.Errorf("unexpected error: %s", err)
 		}
 
-		switch ty := app.printer.(type) {
+		switch ty := app.Printer.(type) {
 		case HorizontalPrinter:
 		default:
 			t.Errorf("unexpected printer type: %s", ty)
@@ -68,7 +68,7 @@ func TestSetPrinterByName(t *testing.T) {
 			t.Errorf("unexpected error: %s", err)
 		}
 
-		switch ty := app.printer.(type) {
+		switch ty := app.Printer.(type) {
 		case VerticalPrinter:
 		default:
 			t.Errorf("unexpected printer type: %s", ty)
@@ -112,7 +112,7 @@ func TestNewAppDefaultDisplay(t *testing.T) {
 		t.Error("unexpected error:", err)
 	}
 
-	switch ty := app.printer.(type) {
+	switch ty := app.Printer.(type) {
 	case VerticalPrinter:
 	default:
 		t.Errorf("unexpected printer type: %s", ty)
