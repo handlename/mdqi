@@ -67,26 +67,49 @@ func NewApp(conf Conf) (*App, error) {
 	// validate mdq path
 	mdqPath := defaultMdqPath
 	if path := conf.Mdq.Bin; path != "" {
-		if err := lookMdqPath(conf.Mdq.Bin); err != nil {
+		Debug.Println("conf.Mdq.Bin =", path)
+
+		abs, err := ExpandPath(path)
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to expand path to mdq")
+		}
+
+		if err := lookMdqPath(abs); err != nil {
 			return nil, errors.Wrapf(err, "mdq command not found at %s", path)
 		}
-		mdqPath = path
-		Debug.Println("conf.Mdq.Bin =", path)
+
+		mdqPath = abs
 	}
 
 	// mdq config path
+	mdqConfPath := conf.Mdq.Config
 	if path := conf.Mdq.Config; path != "" {
 		Debug.Println("conf.Mdq.Config =", path)
+
+		abs, err := ExpandPath(path)
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to expand path to mdq conf")
+		}
+
+		mdqConfPath = abs
 	}
 
 	// create history file
 	historyPath := conf.Mdqi.History
 	if historyPath == "" {
+		Debug.Println("conf.Mdqi.History =", historyPath)
+
 		var err error
 		if historyPath, err = defaultHistoryPath(); err != nil {
 			return nil, errors.Wrap(err, "failed to create history file at default path")
 		}
-		Debug.Println("conf.Mdqi.History =", historyPath)
+	}
+	{
+		abs, err := ExpandPath(historyPath)
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to expand path to history file")
+		}
+		historyPath = abs
 	}
 	if err := createHistoryFile(historyPath); err != nil {
 		return nil, errors.Wrapf(err, "failed to create history file at %s", historyPath)
@@ -96,7 +119,7 @@ func NewApp(conf Conf) (*App, error) {
 		Alive: true,
 
 		mdqPath:                mdqPath,
-		mdqConfigPath:          conf.Mdq.Config,
+		mdqConfigPath:          mdqConfPath,
 		historyPath:            historyPath,
 		slashCommandDefinition: map[string]map[string]SlashCommandDefinition{},
 		Printer:                HorizontalPrinter{},
@@ -323,4 +346,14 @@ func (app *App) SetTag(tag string) {
 
 func (app *App) ClearTag() {
 	app.tag = ""
+}
+
+// ExpandPath expands file path like `~/path/to/foo`
+func ExpandPath(path string) (string, error) {
+	usr, err := user.Current()
+	if err != nil {
+		return "", errors.Wrap(err, "failed to get current user")
+	}
+
+	return strings.Replace(path, "~", usr.HomeDir, 1), nil
 }

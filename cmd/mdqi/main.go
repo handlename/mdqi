@@ -28,10 +28,17 @@ func main() {
 
 	conf := mdqi.Conf{}
 	if confPath != "" {
-		var err error
-		if conf, err = mdqi.ConfFromFile(confPath); err != nil {
+		abs, err := mdqi.ExpandPath(confPath)
+		if err != nil {
 			fmt.Fprintln(os.Stderr, err.Error())
 		}
+
+		c, err := mdqi.ConfFromFile(abs)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err.Error())
+		}
+
+		conf = c
 	}
 
 	app, err := mdqi.NewApp(conf)
