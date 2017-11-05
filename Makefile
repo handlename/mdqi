@@ -3,7 +3,7 @@ CMD=cmd/mdqi/mdqi
 PROJECT_USERNAME=
 PROJECT_REPONAME=
 
-$(CMD): */**/*.go
+$(CMD): *.go */**/*.go
 	go build -v -ldflags '-X main.version=$(VERSION)' -o $@ cmd/mdqi/main.go
 
 .PHONY: dist
