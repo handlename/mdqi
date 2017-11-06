@@ -1,7 +1,7 @@
 VERSION=${shell cat VERSION}
 CMD=cmd/mdqi/mdqi
-PROJECT_USERNAME=
-PROJECT_REPONAME=
+PROJECT_USERNAME=handlename
+PROJECT_REPONAME=mdqi
 
 $(CMD): *.go */**/*.go
 	go build -v -ldflags '-X main.version=$(VERSION)' -o $@ cmd/mdqi/main.go
@@ -12,7 +12,7 @@ dist:
 
 .PHONY: publish
 publish:
-	ghr -u '$(PROJECT_USERNAME)' -r '$(ROJECT_REPONAME)' --replace '$(VERSION)' dist/
+	ghr -u '$(PROJECT_USERNAME)' -r '$(PROJECT_REPONAME)' --replace '$(VERSION)' dist/
 
 .PHONY: clean
 clean:
